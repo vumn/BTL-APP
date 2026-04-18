@@ -1,0 +1,242 @@
+[
+  {
+    "content": "Một nụ cười bằng mười thang...",
+    "answerA": "Thuốc độc",
+    "answerB": "Thuốc ngủ",
+    "answerC": "Thuốc bổ",
+    "answerD": "Thuốc ho",
+    "correctAnswer": "C"
+  },
+  {
+    "content": "Theo quan niệm dân gian, 'Ruột để ngoài...' gì?",
+    "answerA": "Da",
+    "answerB": "Tai",
+    "answerC": "Mắt",
+    "answerD": "Bụng",
+    "correctAnswer": "A"
+  },
+  {
+    "content": "Con vật nào sau đây thường kêu 'Meo meo'?",
+    "answerA": "Chó",
+    "answerB": "Mèo",
+    "answerC": "Chuột",
+    "answerD": "Gà",
+    "correctAnswer": "B"
+  },
+  {
+    "content": "Đèn tín hiệu giao thông thông thường có mấy màu cơ bản?",
+    "answerA": "2",
+    "answerB": "4",
+    "answerC": "3",
+    "answerD": "5",
+    "correctAnswer": "C"
+  },
+  {
+    "content": "Di sản thiên nhiên thế giới Vịnh Hạ Long nằm ở tỉnh nào của Việt Nam?",
+    "answerA": "Hải Phòng",
+    "answerB": "Thái Bình",
+    "answerC": "Nam Định",
+    "answerD": "Quảng Ninh",
+    "correctAnswer": "D"
+  },
+  {
+    "content": "Bánh chưng, bánh giầy gắn liền với truyền thuyết về vị hoàng tử nào?",
+    "answerA": "Lang Liêu",
+    "answerB": "Sơn Tinh",
+    "answerC": "Mai An Tiêm",
+    "answerD": "Thạch Sanh",
+    "correctAnswer": "A"
+  },
+  {
+    "content": "Trong truyền thuyết Sơn Tinh - Thủy Tinh, Thủy Tinh đại diện cho hiện tượng thiên nhiên nào?",
+    "answerA": "Động đất",
+    "answerB": "Lũ lụt",
+    "answerC": "Hạn hán",
+    "answerD": "Sóng thần",
+    "correctAnswer": "B"
+  },
+  {
+    "content": "Ai là người được mệnh danh là 'Trạng Trình'?",
+    "answerA": "Mạc Đĩnh Chi",
+    "answerB": "Lương Thế Vinh",
+    "answerC": "Nguyễn Bỉnh Khiêm",
+    "answerD": "Chu Văn An",
+    "correctAnswer": "C"
+  },
+  {
+    "content": "Bức họa nổi tiếng 'Mona Lisa' là tác phẩm của danh họa nào?",
+    "answerA": "Vincent van Gogh",
+    "answerB": "Pablo Picasso",
+    "answerC": "Leonardo da Vinci",
+    "answerD": "Michelangelo",
+    "correctAnswer": "C"
+  },
+  {
+    "content": "Biển Đông là một biển ven bờ thuộc đại dương nào?",
+    "answerA": "Đại Tây Dương",
+    "answerB": "Ấn Độ Dương",
+    "answerC": "Bắc Băng Dương",
+    "answerD": "Thái Bình Dương",
+    "correctAnswer": "D"
+  },
+  {
+    "content": "Tác giả của bài thơ 'Sóng' được đưa vào chương trình Ngữ Văn là ai?",
+    "answerA": "Hồ Xuân Hương",
+    "answerB": "Xuân Quỳnh",
+    "answerC": "Đoàn Thị Điểm",
+    "answerD": "Bà Huyện Thanh Quan",
+    "correctAnswer": "B"
+  },
+  {
+    "content": "Thành phố nào được mệnh danh là 'Thành phố ngàn hoa' ở Việt Nam?",
+    "answerA": "Sapa",
+    "answerB": "Tam Đảo",
+    "answerC": "Đà Lạt",
+    "answerD": "Bà Nà",
+    "correctAnswer": "C"
+  },
+  {
+    "content": "Loài chim nào có kích thước lớn nhất thế giới hiện nay?",
+    "answerA": "Đà điểu",
+    "answerB": "Đại bàng",
+    "answerC": "Chim cánh cụt",
+    "answerD": "Kền kền",
+    "correctAnswer": "A"
+  },
+  {
+    "content": "Nguyên tố hóa học nào chiếm tỉ lệ nhiều nhất trong khí quyển Trái Đất?",
+    "answerA": "Oxy (Oxygen)",
+    "answerB": "Nitơ (Nitrogen)",
+    "answerC": "Carbon dioxide",
+    "answerD": "Hydro (Hydrogen)",
+    "correctAnswer": "B"
+  },
+  {
+    "content": "Hành tinh nào trong Hệ Mặt Trời có hệ thống vành đai rõ nét nhất?",
+    "answerA": "Sao Mộc",
+    "answerB": "Sao Thiên Vương",
+    "answerC": "Sao Thổ",
+    "answerD": "Sao Hải Vương",
+    "correctAnswer": "C"
+  },
+  {
+    "content": "Sân vận động nổi tiếng Wembley nằm ở quốc gia nào?",
+    "answerA": "Pháp",
+    "answerB": "Đức",
+    "answerC": "Tây Ban Nha",
+    "answerD": "Anh",
+    "correctAnswer": "D"
+  },
+  {
+    "content": "Ai là phi hành gia đầu tiên đặt chân lên Mặt Trăng?",
+    "answerA": "Neil Armstrong",
+    "answerB": "Yuri Gagarin",
+    "answerC": "Buzz Aldrin",
+    "answerD": "Michael Collins",
+    "correctAnswer": "A"
+  },
+  {
+    "content": "Loại nhạc cụ nào sau đây có phím trắng và phím đen?",
+    "answerA": "Guitar",
+    "answerB": "Piano",
+    "answerC": "Violin",
+    "answerD": "Trống",
+    "correctAnswer": "B"
+  },
+  {
+    "content": "Giải thưởng Nobel không trao cho lĩnh vực nào sau đây?",
+    "answerA": "Vật lý",
+    "answerB": "Hòa bình",
+    "answerC": "Toán học",
+    "answerD": "Văn học",
+    "correctAnswer": "C"
+  },
+  {
+    "content": "Quốc gia nào có dân số đông nhất thế giới (tính đến đầu năm 2023)?",
+    "answerA": "Trung Quốc",
+    "answerB": "Ấn Độ",
+    "answerC": "Hoa Kỳ",
+    "answerD": "Indonesia",
+    "correctAnswer": "B"
+  },
+  {
+    "content": "Tên gọi cũ của thành phố Istanbul (Thổ Nhĩ Kỳ) trước năm 1453 là gì?",
+    "answerA": "Alexandria",
+    "answerB": "Babylon",
+    "answerC": "Athens",
+    "answerD": "Constantinople",
+    "correctAnswer": "D"
+  },
+  {
+    "content": "Ai là nữ Thủ tướng đầu tiên của Vương quốc Anh, được mệnh danh là 'Bà đầm thép'?",
+    "answerA": "Theresa May",
+    "answerB": "Margaret Thatcher",
+    "answerC": "Angela Merkel",
+    "answerD": "Indira Gandhi",
+    "correctAnswer": "B"
+  },
+  {
+    "content": "Quốc kỳ của Nhật Bản có biểu tượng gì ở chính giữa?",
+    "answerA": "Ngôi sao",
+    "answerB": "Mặt trăng khuyết",
+    "answerC": "Hình tròn màu đỏ",
+    "answerD": "Chiếc lá phong",
+    "correctAnswer": "C"
+  },
+  {
+    "content": "Tác phẩm văn học kinh điển 'Don Quixote' được viết bằng ngôn ngữ nào?",
+    "answerA": "Tiếng Tây Ban Nha",
+    "answerB": "Tiếng Pháp",
+    "answerC": "Tiếng Ý",
+    "answerD": "Tiếng Bồ Đào Nha",
+    "correctAnswer": "A"
+  },
+  {
+    "content": "Trong thần thoại Hy Lạp, vị thần nào cai trị biển cả?",
+    "answerA": "Zeus",
+    "answerB": "Poseidon",
+    "answerC": "Hades",
+    "answerD": "Apollo",
+    "correctAnswer": "B"
+  },
+  {
+    "content": "Cuộc Cách mạng công nghiệp lần thứ nhất khởi nguồn từ quốc gia nào?",
+    "answerA": "Mỹ",
+    "answerB": "Đức",
+    "answerC": "Pháp",
+    "answerD": "Anh",
+    "correctAnswer": "D"
+  },
+  {
+    "content": "Quốc gia nào có diện tích lãnh thổ lớn thứ 2 trên thế giới?",
+    "answerA": "Mỹ",
+    "answerB": "Trung Quốc",
+    "answerC": "Canada",
+    "answerD": "Brazil",
+    "correctAnswer": "C"
+  },
+  {
+    "content": "Nhà khoa học nào là tác giả của 'Thuyết Tương đối'?",
+    "answerA": "Albert Einstein",
+    "answerB": "Isaac Newton",
+    "answerC": "Galileo Galilei",
+    "answerD": "Stephen Hawking",
+    "correctAnswer": "A"
+  },
+  {
+    "content": "Tính đến hiện tại, quốc gia nào có nhiều hòn đảo nhất trên thế giới?",
+    "answerA": "Indonesia",
+    "answerB": "Philippines",
+    "answerC": "Thụy Điển",
+    "answerD": "Nhật Bản",
+    "correctAnswer": "C"
+  },
+  {
+    "content": "Trong sinh học, DNA là viết tắt của cụm từ tiếng Anh nào?",
+    "answerA": "Deoxyribonucleic acid",
+    "answerB": "Diribonucleic acid",
+    "answerC": "Dioxynucleic acid",
+    "answerD": "Dinucleic acid",
+    "correctAnswer": "A"
+  }
+]
