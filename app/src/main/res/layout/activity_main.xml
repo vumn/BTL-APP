@@ -7,41 +7,50 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/bg_trieuphu"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_trieuphu" />
+
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="Đăng nhập" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
         android:padding="20dp">
 
-<!--        <TextView-->
-<!--            android:text="AI LÀ TRIỆU PHÚ"-->
-<!--            android:textColor="#FFFFFF"-->
-<!--            android:textSize="36sp"-->
-<!--            android:textStyle="bold"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="50dp"/>-->
+        <!--        <TextView-->
+        <!--            android:text="AI LÀ TRIỆU PHÚ"-->
+        <!--            android:textColor="#FFFFFF"-->
+        <!--            android:textSize="36sp"-->
+        <!--            android:textStyle="bold"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginBottom="50dp"/>-->
 
         <Button
             android:id="@+id/btnPlay"
-            android:text="CHƠI NGAY"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/black"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            />
+            android:backgroundTint="@color/black"
+            android:text="CHƠI NGAY"
+            android:textColor="@color/white" />
+
         <Button
             android:id="@+id/btnStats"
-            android:text="THỐNG KÊ"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/black"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/black"
+            android:text="THỐNG KÊ"
+            android:textColor="@color/white" />
 
     </LinearLayout>
 

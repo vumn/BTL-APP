@@ -1,4 +1,4 @@
-package com.example.btl_app;
+package com.example.btl_app.Controller;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,20 +8,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import android.content.DialogInterface;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.example.btl_app.Model.Question;
+import com.example.btl_app.R;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

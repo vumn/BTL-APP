@@ -1,4 +1,4 @@
-package com.example.btl_app;
+package com.example.btl_app.Model;
 
 public class Question {
     private String content;
