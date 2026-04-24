@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_trieuphu"
+        android:scaleType="fitXY" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#33000000"/>
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:text="SẴN SÀNG"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#42A5F5"
+        android:elevation="6dp"/>
+
+
+    <LinearLayout
+        android:id="@+id/moneyContainer"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_alignParentStart="true"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:elevation="10dp">
+
+        <TextView
+            android:id="@+id/money15" style="@style/moneyItem"
+            android:text="15 • 150,000"/>
+        <TextView
+            android:id="@+id/money14" style="@style/moneyItem"
+            android:text="14 • 85,000"/>
+        <TextView
+            android:id="@+id/money13" style="@style/moneyItem"
+            android:text="13 • 60,000"/>
+        <TextView
+            android:id="@+id/money12" style="@style/moneyItem"
+            android:text="12 • 40,000"/>
+        <TextView
+            android:id="@+id/money11" style="@style/moneyItem"
+            android:text="11 • 30,000"/>
+        <TextView
+            android:id="@+id/money10" style="@style/moneyItem"
+            android:text="10 • 22,000"/>
+        <TextView
+            android:id="@+id/money9" style="@style/moneyItem"
+            android:text="9 • 14,000"/>
+        <TextView
+            android:id="@+id/money8" style="@style/moneyItem"
+            android:text="8 • 10,000"/>
+        <TextView
+            android:id="@+id/money7" style="@style/moneyItem"
+            android:text="7 • 6,000"/>
+        <TextView
+            android:id="@+id/money6" style="@style/moneyItem"
+            android:text="6 • 3,000"/>
+        <TextView
+            android:id="@+id/money5" style="@style/moneyItem"
+            android:text="5 • 2,000"/>
+        <TextView
+            android:id="@+id/money4" style="@style/moneyItem"
+            android:text="4 • 1,000"/>
+        <TextView
+            android:id="@+id/money3" style="@style/moneyItem"
+            android:text="3 • 600"/>
+        <TextView
+            android:id="@+id/money2" style="@style/moneyItem"
+            android:text="2 • 400"/>
+        <TextView
+            android:id="@+id/money1" style="@style/moneyItem"
+            android:text="1 • 200"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
