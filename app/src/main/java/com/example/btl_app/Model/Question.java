@@ -1,78 +1,62 @@
 package com.example.btl_app.Model;
 
+import java.util.List;
+
 public class Question {
+    private String questionId;
     private String content;
-    private String ansA;
-    private String ansB;
-    private String ansC;
-    private String ansD;
-    private String correctAnswer;
+    private List<String> answers;
+    private int correctIndex;
     private int level;
 
-    public Question(String content, String ansA, String ansB, String ansC, String ansD, String correctAnswer) {
-        this.content = content;
-        this.ansA = ansA;
-        this.ansB = ansB;
-        this.ansC = ansC;
-        this.ansD = ansD;
-        this.correctAnswer = correctAnswer;
-        this.level = level;
+    public Question() {
     }
 
+    public Question(String questionId, String content, List<String> answers, int correctIndex, int level) {
+        this.answers = answers;
+        this.content = content;
+        this.correctIndex = correctIndex;
+        this.level = level;
+        this.questionId = questionId;
+    }
+
+    public List<String> getAnswers() {
+        return answers;
+    }
 
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getAnsA() {
-        return ansA;
-    }
-
-    public void setAnsA(String ansA) {
-        this.ansA = ansA;
-    }
-
-    public String getAnsB() {
-        return ansB;
-    }
-
-    public void setAnsB(String ansB) {
-        this.ansB = ansB;
-    }
-
-    public String getAnsC() {
-        return ansC;
-    }
-
-    public void setAnsC(String ansC) {
-        this.ansC = ansC;
-    }
-
-    public String getAnsD() {
-        return ansD;
-    }
-
-    public void setAnsD(String ansD) {
-        this.ansD = ansD;
-    }
-
-    public String getCorrectAnswer() {
-        return correctAnswer;
-    }
-
-    public void setCorrectAnswer(String correctAnswer) {
-        this.correctAnswer = correctAnswer;
+    public int getCorrectIndex() {
+        return correctIndex;
     }
 
     public int getLevel() {
         return level;
     }
 
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    public void setAnswers(List<String> answers) {
+        this.answers = answers;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setCorrectIndex(int correctAIndex) {
+        this.correctIndex = correctAIndex;
+    }
+
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
     }
 }

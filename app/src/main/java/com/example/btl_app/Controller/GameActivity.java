@@ -7,7 +7,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.appcompat.app.AlertDialog;
 import android.content.DialogInterface;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class GameActivity extends AppCompatActivity {
+
     private TextView tvQuestionNumber, tvPrize, tvQuestionContent;
     private Button btnAnsA, btnAnsB, btnAnsC, btnAnsD;
     private ImageButton btn5050, btnExpert;
@@ -33,71 +33,30 @@ public class GameActivity extends AppCompatActivity {
     private int currentQuestionIndex = 0;
     private Question currentQuestion;
 
-    private final String[] PRIZES = {"$100", "$200", "$300", "$500", "$1,000", "$2,000", "$4,000", "$8,000", "$16,000", "$32,000", "$64,000", "$125,000", "$250,000", "$500,000", "$1,000,000"};
+    private final String[] PRIZES = {
+            "$100", "$200", "$300", "$500", "$1,000",
+            "$2,000", "$4,000", "$8,000", "$16,000", "$32,000",
+            "$64,000", "$125,000", "$250,000", "$500,000", "$1,000,000"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_game);
 
         initViews();
         loadQuestionsFromJson();
 
         if (allQuestions != null && !allQuestions.isEmpty()) {
-            Collections.shuffle(allQuestions);
-            playQuestions = allQuestions.subList(0, 15);
+            generatePlayQuestions(); // 🔥 chọn 1 câu mỗi level
             loadCurrentQuestion();
         } else {
-            Toast.makeText(this, "Lỗi tải dữ liệu câu hỏi", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Lỗi tải câu hỏi", Toast.LENGTH_SHORT).show();
             finish();
         }
 
         setAnswerClickListener();
         setHelpClickListener();
-
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_game), (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-//            return insets;
-//        });
-    }
-
-    private void setAnswerClickListener() {
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String selectedAnswer = "";
-                if (v.getId() == R.id.btnAnswerA) selectedAnswer = "A";
-                else if (v.getId() == R.id.btnAnswerB) selectedAnswer = "B";
-                else if (v.getId() == R.id.btnAnswerC) selectedAnswer = "C";
-                else if (v.getId() == R.id.btnAnswerD) selectedAnswer = "D";
-
-                checkAnswer(selectedAnswer);
-            }
-        };
-        btnAnsA.setOnClickListener(listener);
-        btnAnsB.setOnClickListener(listener);
-        btnAnsC.setOnClickListener(listener);
-        btnAnsD.setOnClickListener(listener);
-    }
-
-    private void loadCurrentQuestion() {
-        btnAnsA.setVisibility(View.VISIBLE);
-        btnAnsB.setVisibility(View.VISIBLE);
-        btnAnsC.setVisibility(View.VISIBLE);
-        btnAnsD.setVisibility(View.VISIBLE);
-
-        currentQuestion = playQuestions.get(currentQuestionIndex);
-
-        tvQuestionNumber.setText("Câu: " + (currentQuestionIndex + 1) + "/15");
-        tvPrize.setText("Thưởng: " + PRIZES[currentQuestionIndex]);
-        tvQuestionContent.setText(currentQuestion.getContent());
-
-        btnAnsA.setText("A. " + currentQuestion.getAnsA());
-        btnAnsB.setText("B. " + currentQuestion.getAnsB());
-        btnAnsC.setText("C. " + currentQuestion.getAnsC());
-        btnAnsD.setText("D. " + currentQuestion.getAnsD());
     }
 
     private void initViews() {
@@ -113,118 +72,160 @@ public class GameActivity extends AppCompatActivity {
         btn5050 = findViewById(R.id.btn5050);
         btnExpert = findViewById(R.id.btnExpert);
     }
+
+    // 🔥 Load JSON mới (answers + correctIndex)
     private void loadQuestionsFromJson() {
         allQuestions = new ArrayList<>();
-        String jsonStr = "";
         try {
             InputStream is = getAssets().open("questions.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
+            byte[] buffer = new byte[is.available()];
             is.read(buffer);
             is.close();
-            jsonStr = new String(buffer, "UTF-8");
 
+            String jsonStr = new String(buffer, "UTF-8");
             JSONArray jsonArray = new JSONArray(jsonStr);
+
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
+
+                JSONArray ansArray = obj.getJSONArray("answers");
+                List<String> answers = new ArrayList<>();
+
+                for (int j = 0; j < ansArray.length(); j++) {
+                    answers.add(ansArray.getString(j));
+                }
+
                 Question q = new Question(
+                        "Q" + i,
                         obj.getString("content"),
-                        obj.getString("answerA"),
-                        obj.getString("answerB"),
-                        obj.getString("answerC"),
-                        obj.getString("answerD"),
-                        obj.getString("correctAnswer")
+                        answers,
+                        obj.getInt("correctIndex"),
+                        obj.getInt("level")
                 );
+
                 allQuestions.add(q);
             }
         } catch (Exception e) {
-            // Hiện thông báo chứa dòng lỗi chi tiết lên màn hình điện thoại
-            Toast.makeText(this, "Chi tiết lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
-    private void checkAnswer(String selectedAnswer) {
-        if (selectedAnswer.equals(currentQuestion.getCorrectAnswer())) {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < 15) {
-               showResultDialog("Câu trả lời chính xác!", "Bạn có muốn tiếp tục?", true, false);
-            } else {
-                showResultDialog("Chiến thắng", "Chúc mừng, bạn đã trở thành triệu phú", true, true);
+
+    // 🔥 Chọn 1 câu mỗi level (chuẩn game)
+    private void generatePlayQuestions() {
+        playQuestions = new ArrayList<>();
+
+        for (int level = 1; level <= 15; level++) {
+            List<Question> levelList = new ArrayList<>();
+
+            for (Question q : allQuestions) {
+                if (q.getLevel() == level) {
+                    levelList.add(q);
+                }
             }
-        } else {
-            showResultDialog("Rất tiếc!", "Đáp án đúng là: " + currentQuestion.getCorrectAnswer() + ". Chúc bạn may mắn lần sau!", false, false);
+
+            if (!levelList.isEmpty()) {
+                Collections.shuffle(levelList);
+                playQuestions.add(levelList.get(0));
+            }
         }
     }
+
+    private void loadCurrentQuestion() {
+        btnAnsA.setVisibility(View.VISIBLE);
+        btnAnsB.setVisibility(View.VISIBLE);
+        btnAnsC.setVisibility(View.VISIBLE);
+        btnAnsD.setVisibility(View.VISIBLE);
+
+        currentQuestion = playQuestions.get(currentQuestionIndex);
+
+        tvQuestionNumber.setText("Câu " + (currentQuestionIndex + 1) + "/15");
+        tvPrize.setText("Thưởng: " + PRIZES[currentQuestionIndex]);
+        tvQuestionContent.setText(currentQuestion.getContent());
+
+        List<String> ans = currentQuestion.getAnswers();
+
+        btnAnsA.setText("A. " + ans.get(0));
+        btnAnsB.setText("B. " + ans.get(1));
+        btnAnsC.setText("C. " + ans.get(2));
+        btnAnsD.setText("D. " + ans.get(3));
+    }
+
+    // 🔥 Click đáp án (dùng index)
+    private void setAnswerClickListener() {
+        btnAnsA.setOnClickListener(v -> checkAnswer(0));
+        btnAnsB.setOnClickListener(v -> checkAnswer(1));
+        btnAnsC.setOnClickListener(v -> checkAnswer(2));
+        btnAnsD.setOnClickListener(v -> checkAnswer(3));
+    }
+
+    private void checkAnswer(int selectedIndex) {
+        if (selectedIndex == currentQuestion.getCorrectIndex()) {
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < 15) {
+                showResultDialog("Đúng!", "Bạn muốn tiếp tục?", true, false);
+            } else {
+                showResultDialog("Chiến thắng!", "Bạn đã trở thành triệu phú!", true, true);
+            }
+        } else {
+            int correct = currentQuestion.getCorrectIndex();
+            showResultDialog("Sai!",
+                    "Đáp án đúng là: " + (char) ('A' + correct),
+                    false, false);
+        }
+    }
+
     private void showResultDialog(String title, String message, boolean isCorrect, boolean isWin) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
         builder.setMessage(message);
-
-        builder.setCancelable(false); // Ngăn người chơi bấm ra khoảng trống để tắt dialog
+        builder.setCancelable(false);
 
         if (isWin) {
-            builder.setPositiveButton("Chúc mừng!", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            });
+            builder.setPositiveButton("Kết thúc", (d, w) -> finish());
+        } else if (isCorrect) {
+            builder.setPositiveButton("Tiếp tục", (d, w) -> loadCurrentQuestion());
+        } else {
+            builder.setPositiveButton("Thoát", (d, w) -> finish());
         }
-        else if (isCorrect) {
-            builder.setPositiveButton("Tiếp tục", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    loadCurrentQuestion();
-                }
-            });
-        }
-        else {
-            builder.setPositiveButton("Quay lại màn hình chính", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            });
-        }
+
         builder.show();
     }
 
-    // 2 quyền trợ giúp
+    // 🔥 50:50 + Expert
     private void setHelpClickListener() {
-        btn5050.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btn5050.setEnabled(false);
-                btn5050.setAlpha(0.5f);
 
-                String correctAnswer = currentQuestion.getCorrectAnswer();
+        btn5050.setOnClickListener(v -> {
+            btn5050.setEnabled(false);
+            btn5050.setAlpha(0.5f);
 
-                List<Button> wrongButtons = new ArrayList<>();
-                if (!correctAnswer.equals("A")) wrongButtons.add(btnAnsA);
-                if (!correctAnswer.equals("B")) wrongButtons.add(btnAnsB);
-                if (!correctAnswer.equals("C")) wrongButtons.add(btnAnsC);
-                if (!correctAnswer.equals("D")) wrongButtons.add(btnAnsD);
+            int correct = currentQuestion.getCorrectIndex();
 
-                Collections.shuffle(wrongButtons);
+            List<Button> wrongButtons = new ArrayList<>();
 
-                wrongButtons.get(0).setVisibility(View.INVISIBLE);
-                wrongButtons.get(1).setVisibility(View.INVISIBLE);
-            }
+            if (correct != 0) wrongButtons.add(btnAnsA);
+            if (correct != 1) wrongButtons.add(btnAnsB);
+            if (correct != 2) wrongButtons.add(btnAnsC);
+            if (correct != 3) wrongButtons.add(btnAnsD);
+
+            Collections.shuffle(wrongButtons);
+
+            wrongButtons.get(0).setVisibility(View.INVISIBLE);
+            wrongButtons.get(1).setVisibility(View.INVISIBLE);
         });
-        btnExpert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btnExpert.setEnabled(false);
-                btnExpert.setAlpha(0.5f);
 
-                String correctAnswer = currentQuestion.getCorrectAnswer();
-                AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-                builder.setTitle("Chuyên gia");
-                builder.setMessage("Với kinh nghiệm của mình, tôi nghĩ đáp án đúng là: " + correctAnswer);
-                builder.setPositiveButton("Cảm ơn", null);
-                builder.show();
-            }
+        btnExpert.setOnClickListener(v -> {
+            btnExpert.setEnabled(false);
+            btnExpert.setAlpha(0.5f);
+
+            int correct = currentQuestion.getCorrectIndex();
+
+            new AlertDialog.Builder(GameActivity.this)
+                    .setTitle("Chuyên gia")
+                    .setMessage("Tôi nghĩ đáp án đúng là: " + (char) ('A' + correct))
+                    .setPositiveButton("OK", null)
+                    .show();
         });
     }
-
 }

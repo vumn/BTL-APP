@@ -47,18 +47,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center"
-        >
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/btnRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="32dp"
-            android:layout_marginBottom="64dp"
             android:layout_marginEnd="20dp"
-            android:enabled="false"
+            android:layout_marginBottom="64dp"
             android:text="@string/action_register" />
 
         <Button
@@ -66,9 +65,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="64dp"
-            android:layout_marginStart="20dp"
             android:enabled="false"
             android:text="@string/action_sign_in_short" />
     </LinearLayout>
