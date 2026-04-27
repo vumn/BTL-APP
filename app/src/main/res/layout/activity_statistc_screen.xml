@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/bg_trieuphu"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_trieuphu" />
 
     <View
         android:layout_width="match_parent"
@@ -19,30 +19,30 @@
         android:id="@+id/titleStats"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
         android:text="THỐNG KÊ"
         android:textColor="#FFD700"
         android:textSize="30sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginTop="40dp" />
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/titleStats"
         android:layout_margin="20dp"
-        android:orientation="vertical"
-        android:padding="16dp"
         android:background="#CC000000"
-        android:elevation="12dp">
+        android:elevation="12dp"
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
+            android:layout_marginBottom="8dp"
             android:background="#2200BFFF"
-            android:layout_marginBottom="8dp">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -58,17 +58,17 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="#FFD700"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
+            android:layout_marginBottom="8dp"
             android:background="#2232CD32"
-            android:layout_marginBottom="8dp">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -84,17 +84,17 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="#FFD700"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
+            android:layout_marginBottom="8dp"
             android:background="#22FF1100"
-            android:layout_marginBottom="8dp">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -110,17 +110,17 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
+            android:layout_marginBottom="8dp"
             android:background="#22FFD710"
-            android:layout_marginBottom="8dp">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -136,17 +136,17 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
+            android:layout_marginBottom="8dp"
             android:background="#2200FFFF"
-            android:layout_marginBottom="8dp">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -162,17 +162,17 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="#00FFFF"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
+            android:layout_marginBottom="8dp"
             android:background="#2200FF7F"
-            android:layout_marginBottom="8dp">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -188,16 +188,16 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="#00FF7F"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#22FFA500"
             android:orientation="horizontal"
-            android:padding="12dp"
-            android:background="#22FFA500">
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -213,9 +213,18 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="#FFA500"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnBackHomeFromStatisticScreenToHomeUser"
+            android:text="Quay Lại Home"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            />
 
     </LinearLayout>
 

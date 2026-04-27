@@ -12,6 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BTLAPP">
         <activity
+            android:name=".View.AccountInformation"
+            android:exported="false" />
+        <activity
+            android:name=".Pesonal_information"
+            android:exported="false" />
+        <activity
+            android:name=".Controller.SettingScreen"
+            android:exported="false" />
+        <activity
+            android:name=".Controller.StatistcScreen"
+            android:exported="false" />
+        <activity
             android:name=".View.HomeUser"
             android:exported="false" />
         <activity

@@ -27,17 +27,8 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!--        <TextView-->
-        <!--            android:text="AI LÀ TRIỆU PHÚ"-->
-        <!--            android:textColor="#FFFFFF"-->
-        <!--            android:textSize="36sp"-->
-        <!--            android:textStyle="bold"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginBottom="50dp"/>-->
-
         <Button
-            android:id="@+id/btnPlay"
+            android:id="@+id/btnPlayUser"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:backgroundTint="@color/black"
@@ -45,7 +36,7 @@
             android:textColor="@color/white" />
 
         <Button
-            android:id="@+id/btnStats"
+            android:id="@+id/btnStatisticUser"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:backgroundTint="@color/black"
@@ -53,13 +44,12 @@
             android:textColor="@color/white" />
 
         <Button
+            android:id="@+id/btnSettingUser"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:backgroundTint="@color/black"
-            android:textColor="@color/white"
             android:text="Cài đặt"
-
-
+            android:textColor="@color/white"
             />
 
     </LinearLayout>

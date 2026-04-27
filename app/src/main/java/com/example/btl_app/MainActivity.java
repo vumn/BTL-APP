@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 //        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        btnPlay = findViewById(R.id.btnPlay);
+        btnPlay = findViewById(R.id.btnPlayCustomer);
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnStats = findViewById(R.id.btnStats);
+        btnStats = findViewById(R.id.btnStatisticCustomer);
 
         btnLogin = findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {

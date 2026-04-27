@@ -26,7 +26,7 @@ public class GameActivity extends AppCompatActivity {
 
     private TextView tvQuestionNumber, tvPrize, tvQuestionContent;
     private Button btnAnsA, btnAnsB, btnAnsC, btnAnsD;
-    private ImageButton btn5050, btnExpert;
+    private ImageButton btn5050, btnExpert, btnStatistic, btnCall;
 
     private List<Question> allQuestions;
     private List<Question> playQuestions;
@@ -69,8 +69,10 @@ public class GameActivity extends AppCompatActivity {
         btnAnsC = findViewById(R.id.btnAnswerC);
         btnAnsD = findViewById(R.id.btnAnswerD);
 
-        btn5050 = findViewById(R.id.btn5050);
-        btnExpert = findViewById(R.id.btnExpert);
+        btn5050 = findViewById(R.id.btn5050Game);
+        btnExpert = findViewById(R.id.btnExpertGame);
+        btnStatistic = findViewById(R.id.btnStatisticGame);
+        btnCall = findViewById(R.id.btnCallGame);
     }
 
     // 🔥 Load JSON mới (answers + correctIndex)

@@ -36,7 +36,7 @@
         <!--            android:layout_marginBottom="50dp"/>-->
 
         <Button
-            android:id="@+id/btnPlay"
+            android:id="@+id/btnPlayCustomer"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:backgroundTint="@color/black"
@@ -44,14 +44,20 @@
             android:textColor="@color/white" />
 
         <Button
-            android:id="@+id/btnStats"
+            android:id="@+id/btnStatisticCustomer"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginBottom="20dp"
             android:backgroundTint="@color/black"
             android:text="THỐNG KÊ"
             android:textColor="@color/white" />
 
+        <Button
+            android:id="@+id/btnSettingCustomer"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/black"
+            android:text="Cài đặt"
+            android:textColor="@color/white" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -61,7 +61,7 @@
             >
 
             <ImageButton
-                android:id="@+id/btn5050"
+                android:id="@+id/btn5050Game"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00BCD4"
@@ -69,7 +69,7 @@
                 android:textColor="#FFFFFF" />
 
             <ImageButton
-                android:id="@+id/btnStatistic"
+                android:id="@+id/btnStatisticGame"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00BCD4"
@@ -77,7 +77,7 @@
                 android:textColor="#FFFFFF" />
 
             <ImageButton
-                android:id="@+id/btnCall"
+                android:id="@+id/btnCallGame"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00BCD4"
@@ -86,7 +86,7 @@
 
 
             <ImageButton
-                android:id="@+id/btnExpert"
+                android:id="@+id/btnExpertGame"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00BCD4"
