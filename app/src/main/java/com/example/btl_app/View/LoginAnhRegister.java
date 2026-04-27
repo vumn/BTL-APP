@@ -124,7 +124,7 @@ public class LoginAnhRegister extends AppCompatActivity {
                             // Đừng quên ẩn Progressbar
                             progressBar.setVisibility(View.GONE);
 
-                            Intent it = new Intent(LoginAnhRegister.this, MainActivity.class);
+                            Intent it = new Intent(LoginAnhRegister.this, HomeUser.class);
                             startActivity(it);
                             finish(); // Nên finish màn hình đăng nhập để user không back lại được
                         }, 2000); // 10000ms (10 giây) là quá lâu cho trải nghiệm người dùng, mình khuyên để 2000ms thôi

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_trieuphu" />
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/Avatar"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/avatar_test" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!--        <TextView-->
+        <!--            android:text="AI LÀ TRIỆU PHÚ"-->
+        <!--            android:textColor="#FFFFFF"-->
+        <!--            android:textSize="36sp"-->
+        <!--            android:textStyle="bold"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginBottom="50dp"/>-->
+
+        <Button
+            android:id="@+id/btnPlay"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/black"
+            android:text="CHƠI NGAY"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnStats"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/black"
+            android:text="THỐNG KÊ"
+            android:textColor="@color/white" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/black"
+            android:textColor="@color/white"
+            android:text="Cài đặt"
+
+
+            />
+
+    </LinearLayout>
+</RelativeLayout>

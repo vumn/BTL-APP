@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BTLAPP">
         <activity
+            android:name=".View.HomeUser"
+            android:exported="false" />
+        <activity
             android:name=".View.LoginAnhRegister"
             android:exported="false" />
         <activity
