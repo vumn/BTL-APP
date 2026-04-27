@@ -9,7 +9,7 @@
         android:id="@+id/lblTitleDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Thông Báo"
+        android:text="Đăng ký"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -81,6 +81,15 @@
         android:textSize="15sp" />
 
     <TextView
+        android:id="@+id/txtErrorRePass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mật khẩu không khớp!"
+        android:textColor="#FF0000"
+        android:textSize="10sp"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/lblSelectImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -106,7 +115,6 @@
             android:id="@+id/btnOKRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:enabled="false"
             android:text="@string/action_register"
             android:textSize="15sp" />
 
