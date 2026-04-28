@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_trieuphu"
+        android:scaleType="centerCrop"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#66000000"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tvId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ID: Q1"
+            android:textColor="#FFEB3B"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/tvContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nội dung câu hỏi"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvAnswers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="A. ... B. ... C. ... D. ..."
+            android:textColor="#CCCCCC"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/tvCorrect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đáp án đúng: A"
+            android:textColor="#4CAF50"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/tvLevel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Level: 1"
+            android:textColor="#03A9F4"
+            android:textSize="13sp"/>
+
+    </LinearLayout>
+
+</FrameLayout>
