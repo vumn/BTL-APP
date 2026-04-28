@@ -45,6 +45,7 @@ public class LoginAnhRegister extends AppCompatActivity {
 
     // Biến cho ảnh Avatar (để Launcher có thể truy cập được)
     private ImageButton imgBtnSelectAvarta;
+    private String role;
 
     // Khởi tạo Launcher để chọn ảnh
     private final ActivityResultLauncher<String> selectImageLauncher = registerForActivityResult(
@@ -124,10 +125,26 @@ public class LoginAnhRegister extends AppCompatActivity {
                             // Đừng quên ẩn Progressbar
                             progressBar.setVisibility(View.GONE);
 
-                            Intent it = new Intent(LoginAnhRegister.this, HomeUser.class);
-                            startActivity(it);
-                            finish(); // Nên finish màn hình đăng nhập để user không back lại được
-                        }, 2000); // 10000ms (10 giây) là quá lâu cho trải nghiệm người dùng, mình khuyên để 2000ms thôi
+                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                            db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
+                               if(documentSnapshot.exists())
+                               {
+                                   role = documentSnapshot.getString("role");
+                                   if(role.equals("admin"))
+                                   {
+                                       Intent it = new Intent(LoginAnhRegister.this, HomeAdmin.class);
+                                       startActivity(it);
+                                       finish();
+                                   }else if(role.equals("user")){
+                                       Intent it = new Intent(LoginAnhRegister.this, HomeUser.class);
+                                       startActivity(it);
+                                       finish();
+                                   }
+                               }
+                            });
+                        }, 2000);
                     } else {
                         progressBar.setVisibility(View.GONE);
                         Log.w("Main", task.getException().getMessage());
@@ -209,7 +226,7 @@ public class LoginAnhRegister extends AppCompatActivity {
     }
 
     private void saveUserToFirebase(String userId, String userName, String s) {
-        User user = new User(userId, userName, s, new Date());
+        User user = new User(userId, userName, s, "user", new Date());
         FirebaseFirestore.getInstance().collection("users").document(userId).set(user).addOnSuccessListener(unused -> Log.d("FireStore", "user saved")).addOnFailureListener(e -> Log.d("Firestore", "Error" + e.getMessage()));
     }
 

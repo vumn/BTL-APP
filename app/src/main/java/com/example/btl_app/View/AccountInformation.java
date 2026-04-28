@@ -27,7 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AccountInformation extends AppCompatActivity {
 
-    private String name, imageUri, createAt;
+    private String name, imageUri, createAt, role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +73,25 @@ public class AccountInformation extends AppCompatActivity {
         btnBackHomeUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent it = new Intent(AccountInformation.this, HomeUser.class);
-                it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(it);
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        role = documentSnapshot.getString("role");
+                        if (role.equals("admin")) {
+                            Intent it = new Intent(AccountInformation.this, HomeAdmin.class);
+                            it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(it);
+                        }
+                        if (role.equals("user")) {
+                            Intent it = new Intent(AccountInformation.this, HomeUser.class);
+                            it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(it);
+                        }
+                    }
+                });
             }
         });
 

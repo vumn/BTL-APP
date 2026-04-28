@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/bg_trieuphu"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_trieuphu" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#66000000"/>
+        android:background="#66000000" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,25 +24,33 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
             android:text="QUẢN LÝ USER"
             android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            android:gravity="center"
-            android:padding="10dp"/>
+            android:textSize="22sp" />
 
         <ListView
             android:id="@+id/listViewUser"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/btnAddUser"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Thêm User"
             android:backgroundTint="#2196F3"
-            android:textColor="#FFFFFF"/>
+            android:text="Thêm User"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnBackAdminScreenFromUserListScreen"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="#2196F3"
+            android:text="Quay Lại Admin Screen"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
 </RelativeLayout>

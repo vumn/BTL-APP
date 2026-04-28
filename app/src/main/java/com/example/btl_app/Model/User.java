@@ -7,15 +7,21 @@ public class User {
     private String userId;
     private String imageUri;
     private Date createAt;
+    private String role;
 
-    public User(String userId, String userName, String imageUri, Date createAt) {
+    public User(String userId, String userName, String imageUri, String role, Date createAt) {
         this.createAt = createAt;
         this.imageUri = imageUri;
         this.userId = userId;
+        this.role = role;
         this.userName = userName;
     }
 
     public User() {
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public Date getCreateAt() {
@@ -48,5 +54,9 @@ public class User {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

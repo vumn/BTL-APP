@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_trieuphu" />
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ImgBtnAvatarAdmin"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/avatar_test"
+        app:civ_border_color="@color/black"
+        app:civ_border_width="2dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#55000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <Button
+            android:id="@+id/btnUserManagement"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Quản lý người dùng" />
+
+        <Button
+            android:id="@+id/btnQuestionManagement"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Quản lý câu hỏi" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

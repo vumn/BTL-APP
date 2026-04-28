@@ -12,6 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BTLAPP">
         <activity
+            android:name=".View.QuestionManagementScreen"
+            android:exported="false" />
+        <activity
+            android:name=".View.UserManagementScreen"
+            android:exported="false" />
+        <activity
+            android:name=".View.HomeAdmin"
+            android:exported="false" />
+        <activity
             android:name=".View.AccountInformation"
             android:exported="false" />
         <activity

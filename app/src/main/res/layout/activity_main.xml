@@ -26,37 +26,12 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!--        <TextView-->
-        <!--            android:text="AI LÀ TRIỆU PHÚ"-->
-        <!--            android:textColor="#FFFFFF"-->
-        <!--            android:textSize="36sp"-->
-        <!--            android:textStyle="bold"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginBottom="50dp"/>-->
-
         <Button
             android:id="@+id/btnPlayCustomer"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:backgroundTint="@color/black"
             android:text="CHƠI NGAY"
-            android:textColor="@color/white" />
-
-        <Button
-            android:id="@+id/btnStatisticCustomer"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:backgroundTint="@color/black"
-            android:text="THỐNG KÊ"
-            android:textColor="@color/white" />
-
-        <Button
-            android:id="@+id/btnSettingCustomer"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:backgroundTint="@color/black"
-            android:text="Cài đặt"
             android:textColor="@color/white" />
     </LinearLayout>
 

@@ -12,8 +12,6 @@ import com.example.btl_app.View.LoginAnhRegister;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnPlay;
-    private Button btnStats;
-
     private Button btnLogin;
 
     @Override
@@ -30,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(it);
             }
         });
-
-        btnStats = findViewById(R.id.btnStatisticCustomer);
 
         btnLogin = findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
