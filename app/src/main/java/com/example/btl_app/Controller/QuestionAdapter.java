@@ -72,9 +72,14 @@ public class QuestionAdapter extends BaseAdapter {
 
         viewHolderQuestion.lvIdQuestion.setText(question.getQuestionId());
         viewHolderQuestion.lvContentQuestion.setText(question.getContent());
-        viewHolderQuestion.lvAnswersQuestion.setText(TextUtils.join(", ", question.getAnswers()));
+        if(question.getAnswers() != null)
+        {
+            viewHolderQuestion.lvAnswersQuestion.setText(TextUtils.join(", ", question.getAnswers()));
+        }else{
+            viewHolderQuestion.lvAnswersQuestion.setText("");
+        }
         viewHolderQuestion.lvCorrectQuestion.setText(String.valueOf(question.getCorrectIndex()));
-        viewHolderQuestion.lvLevelQuestion.setText(question.getLevel());
+        viewHolderQuestion.lvLevelQuestion.setText(String.valueOf(question.getLevel()));
 
         return view;
     }

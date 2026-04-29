@@ -2,32 +2,31 @@ package com.example.btl_app.Controller;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import androidx.appcompat.app.AlertDialog;
-import android.content.DialogInterface;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.btl_app.Model.Question;
 import com.example.btl_app.R;
+import com.google.firebase.firestore.*;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class GameActivity extends AppCompatActivity {
 
+    // ===== SESSION + STATS =====
+    private String sessionId;
+    private List<String> lifelinesUsed = new ArrayList<>();
+    private int correctAnswers = 0;
+    private int wrongAnswers = 0;
+
+    // ===== UI =====
     private TextView tvQuestionNumber, tvPrize, tvQuestionContent;
     private Button btnAnsA, btnAnsB, btnAnsC, btnAnsD;
     private ImageButton btn5050, btnExpert, btnStatistic, btnCall;
 
+    // ===== DATA =====
     private List<Question> allQuestions;
     private List<Question> playQuestions;
     private int currentQuestionIndex = 0;
@@ -39,26 +38,28 @@ public class GameActivity extends AppCompatActivity {
             "$64,000", "$125,000", "$250,000", "$500,000", "$1,000,000"
     };
 
+    // LIFECYCLE
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
         initViews();
-        loadQuestionsFromJson();
-
-        if (allQuestions != null && !allQuestions.isEmpty()) {
-            generatePlayQuestions(); // 🔥 chọn 1 câu mỗi level
-            loadCurrentQuestion();
-        } else {
-            Toast.makeText(this, "Lỗi tải câu hỏi", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        loadQuestionsFromFirestore();
 
         setAnswerClickListener();
         setHelpClickListener();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (sessionId != null) {
+            updateGameSession("quit");
+        }
+    }
+
+    // INIT UI
     private void initViews() {
         tvQuestionNumber = findViewById(R.id.tvQuestionNumber);
         tvPrize = findViewById(R.id.tvPrize);
@@ -75,45 +76,31 @@ public class GameActivity extends AppCompatActivity {
         btnCall = findViewById(R.id.btnCallGame);
     }
 
-    // 🔥 Load JSON mới (answers + correctIndex)
-    private void loadQuestionsFromJson() {
+    // LOAD DATA
+    private void loadQuestionsFromFirestore() {
         allQuestions = new ArrayList<>();
-        try {
-            InputStream is = getAssets().open("questions.json");
-            byte[] buffer = new byte[is.available()];
-            is.read(buffer);
-            is.close();
 
-            String jsonStr = new String(buffer, "UTF-8");
-            JSONArray jsonArray = new JSONArray(jsonStr);
+        FirebaseFirestore.getInstance().collection("questions").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
 
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Question q = doc.toObject(Question.class);
+                        q.setQuestionId(doc.getId());
+                        allQuestions.add(q);
+                    }
 
-                JSONArray ansArray = obj.getJSONArray("answers");
-                List<String> answers = new ArrayList<>();
-
-                for (int j = 0; j < ansArray.length(); j++) {
-                    answers.add(ansArray.getString(j));
-                }
-
-                Question q = new Question(
-                        "Q" + i,
-                        obj.getString("content"),
-                        answers,
-                        obj.getInt("correctIndex"),
-                        obj.getInt("level")
-                );
-
-                allQuestions.add(q);
-            }
-        } catch (Exception e) {
-            Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
+                    if (!allQuestions.isEmpty()) {
+                        generatePlayQuestions();
+                        createGameSession();
+                        loadCurrentQuestion();
+                    } else {
+                        Toast.makeText(this, "Không có câu hỏi", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Lỗi Firestore", Toast.LENGTH_SHORT).show());
     }
 
-    // 🔥 Chọn 1 câu mỗi level (chuẩn game)
     private void generatePlayQuestions() {
         playQuestions = new ArrayList<>();
 
@@ -129,15 +116,16 @@ public class GameActivity extends AppCompatActivity {
             if (!levelList.isEmpty()) {
                 Collections.shuffle(levelList);
                 playQuestions.add(levelList.get(0));
+            } else {
+                Toast.makeText(this, "Thiếu level " + level, Toast.LENGTH_LONG).show();
             }
         }
     }
 
+    // GAME LOGIC
     private void loadCurrentQuestion() {
-        btnAnsA.setVisibility(View.VISIBLE);
-        btnAnsB.setVisibility(View.VISIBLE);
-        btnAnsC.setVisibility(View.VISIBLE);
-        btnAnsD.setVisibility(View.VISIBLE);
+
+        btnExpert.setVisibility(currentQuestionIndex >= 5 ? View.VISIBLE : View.GONE);
 
         currentQuestion = playQuestions.get(currentQuestionIndex);
 
@@ -147,13 +135,14 @@ public class GameActivity extends AppCompatActivity {
 
         List<String> ans = currentQuestion.getAnswers();
 
+        LoadAnswers();
+
         btnAnsA.setText("A. " + ans.get(0));
         btnAnsB.setText("B. " + ans.get(1));
         btnAnsC.setText("C. " + ans.get(2));
         btnAnsD.setText("D. " + ans.get(3));
     }
 
-    // 🔥 Click đáp án (dùng index)
     private void setAnswerClickListener() {
         btnAnsA.setOnClickListener(v -> checkAnswer(0));
         btnAnsB.setOnClickListener(v -> checkAnswer(1));
@@ -162,18 +151,32 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void checkAnswer(int selectedIndex) {
+
         if (selectedIndex == currentQuestion.getCorrectIndex()) {
+
+            correctAnswers++;
             currentQuestionIndex++;
 
             if (currentQuestionIndex < 15) {
-                showResultDialog("Đúng!", "Bạn muốn tiếp tục?", true, false);
+                updateGameSession("playing");
+                showResultDialog("Đúng!", "Tiếp tục?", true, false);
             } else {
-                showResultDialog("Chiến thắng!", "Bạn đã trở thành triệu phú!", true, true);
+                updateGameSession("win");
+                updateStatistics(true);
+                showResultDialog("Chiến thắng!", "Bạn đã thắng!", true, true);
             }
+
         } else {
+
+            wrongAnswers++;
+
+            updateGameSession("lose");
+            updateStatistics(false);
+
             int correct = currentQuestion.getCorrectIndex();
+
             showResultDialog("Sai!",
-                    "Đáp án đúng là: " + (char) ('A' + correct),
+                    "Đáp án đúng: " + (char) ('A' + correct),
                     false, false);
         }
     }
@@ -195,39 +198,189 @@ public class GameActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // 🔥 50:50 + Expert
+    // LIFELINES
     private void setHelpClickListener() {
 
         btn5050.setOnClickListener(v -> {
             btn5050.setEnabled(false);
-            btn5050.setAlpha(0.5f);
+            lifelinesUsed.add("5050");
 
             int correct = currentQuestion.getCorrectIndex();
+            List<Button> wrong = new ArrayList<>();
 
-            List<Button> wrongButtons = new ArrayList<>();
+            if (correct != 0) wrong.add(btnAnsA);
+            if (correct != 1) wrong.add(btnAnsB);
+            if (correct != 2) wrong.add(btnAnsC);
+            if (correct != 3) wrong.add(btnAnsD);
 
-            if (correct != 0) wrongButtons.add(btnAnsA);
-            if (correct != 1) wrongButtons.add(btnAnsB);
-            if (correct != 2) wrongButtons.add(btnAnsC);
-            if (correct != 3) wrongButtons.add(btnAnsD);
-
-            Collections.shuffle(wrongButtons);
-
-            wrongButtons.get(0).setVisibility(View.INVISIBLE);
-            wrongButtons.get(1).setVisibility(View.INVISIBLE);
+            Collections.shuffle(wrong);
+            wrong.get(0).setVisibility(View.INVISIBLE);
+            wrong.get(1).setVisibility(View.INVISIBLE);
         });
 
         btnExpert.setOnClickListener(v -> {
             btnExpert.setEnabled(false);
-            btnExpert.setAlpha(0.5f);
+            lifelinesUsed.add("expert");
 
             int correct = currentQuestion.getCorrectIndex();
 
-            new AlertDialog.Builder(GameActivity.this)
+            new AlertDialog.Builder(this)
                     .setTitle("Chuyên gia")
-                    .setMessage("Tôi nghĩ đáp án đúng là: " + (char) ('A' + correct))
-                    .setPositiveButton("OK", null)
+                    .setMessage("Đáp án: " + (char) ('A' + correct))
                     .show();
         });
+
+        btnCall.setOnClickListener(v -> {
+            btnCall.setEnabled(false);
+            lifelinesUsed.add("call");
+
+            int correct = currentQuestion.getCorrectIndex();
+            int answer = Math.random() < 0.75 ? correct : new Random().nextInt(4);
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Gọi điện")
+                    .setMessage("Chọn: " + (char) ('A' + answer))
+                    .show();
+        });
+
+        btnStatistic.setOnClickListener(v -> {
+            btnStatistic.setEnabled(false);
+            lifelinesUsed.add("audience");
+
+            int correct = currentQuestion.getCorrectIndex();
+
+            int correctPercent = 50 + new Random().nextInt(30);
+            int remain = 100 - correctPercent;
+
+            int[] percent = new int[4];
+            percent[correct] = correctPercent;
+
+            for (int i = 0; i < 4; i++) {
+                if (i != correct) {
+                    percent[i] = remain / 3;
+                }
+            }
+
+            String msg =
+                    "A: " + percent[0] + "%\n" +
+                            "B: " + percent[1] + "%\n" +
+                            "C: " + percent[2] + "%\n" +
+                            "D: " + percent[3] + "%";
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Khán giả")
+                    .setMessage(msg)
+                    .show();
+        });
+    }
+
+    private void LoadAnswers() {
+        btnAnsA.setVisibility(View.VISIBLE);
+        btnAnsB.setVisibility(View.VISIBLE);
+        btnAnsC.setVisibility(View.VISIBLE);
+        btnAnsD.setVisibility(View.VISIBLE);
+    }
+
+    // FIRESTORE - SESSION
+    private void createGameSession() {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String userId = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DocumentReference doc = db.collection("gamesessions").document();
+        sessionId = doc.getId();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("sessionId", sessionId);
+        data.put("userId", userId);
+        data.put("score", 0);
+        data.put("currentLevel", 1);
+        data.put("money", 0);
+        data.put("result", "playing");
+        data.put("lifelinesUsed", new ArrayList<>());
+        data.put("playedAt", System.currentTimeMillis());
+        data.put("isFinished", false);
+
+        doc.set(data);
+    }
+
+    private void updateGameSession(String result) {
+
+        if (sessionId == null) return;
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("score", currentQuestionIndex);
+        data.put("currentLevel", currentQuestionIndex + 1);
+        data.put("money", getMoney());
+        data.put("result", result);
+        data.put("lifelinesUsed", lifelinesUsed);
+        data.put("isFinished", !result.equals("playing"));
+
+        FirebaseFirestore.getInstance()
+                .collection("gamesessions")
+                .document(sessionId)
+                .update(data);
+    }
+
+    // FIRESTORE - STATISTICS
+    private void updateStatistics(boolean isWin) {
+
+        String userId = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("statistics").document(userId).get()
+                .addOnSuccessListener(doc -> {
+
+                    int totalGames = 1;
+                    int totalWins = isWin ? 1 : 0;
+                    int totalLoses = isWin ? 0 : 1;
+                    int highestScore = currentQuestionIndex;
+                    int avgScore = currentQuestionIndex;
+
+                    int totalCorrect = correctAnswers;
+                    int totalWrong = wrongAnswers;
+
+                    if (doc.exists()) {
+
+                        int oldGames = doc.getLong("totalGames").intValue();
+
+                        totalGames += oldGames;
+                        totalWins += doc.getLong("totalWins").intValue();
+                        totalLoses += doc.getLong("totalLoses").intValue();
+
+                        highestScore = Math.max(highestScore,
+                                doc.getLong("highestScore").intValue());
+
+                        totalCorrect += doc.getLong("correctAnswers").intValue();
+                        totalWrong += doc.getLong("wrongAnswers").intValue();
+
+                        int oldAvg = doc.getLong("averageScore").intValue();
+                        avgScore = (oldAvg * oldGames + currentQuestionIndex) / (oldGames + 1);
+                    }
+
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("userId", userId);
+                    data.put("totalGames", totalGames);
+                    data.put("totalWins", totalWins);
+                    data.put("totalLoses", totalLoses);
+                    data.put("highestScore", highestScore);
+                    data.put("averageScore", avgScore);
+                    data.put("correctAnswers", totalCorrect);
+                    data.put("wrongAnswers", totalWrong);
+
+                    db.collection("statistics").document(userId).set(data);
+                });
+    }
+
+    // UTIL
+    private int getMoney() {
+        int[] money = {
+                100, 200, 300, 500, 1000,
+                2000, 4000, 8000, 16000, 32000,
+                64000, 125000, 250000, 500000, 1000000
+        };
+
+        if (currentQuestionIndex == 0) return 0;
+        return money[currentQuestionIndex - 1];
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +25,7 @@ public class QuestionManagementScreen extends AppCompatActivity {
 
     private ArrayList<Question> questionArrayList;
     private QuestionAdapter questionAdapter;
-    private Button btnBackAdminScreenFromQuestionListScreen;
+    private Button btnBackAdminScreenFromQuestionListScreen, btnAddQuestion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class QuestionManagementScreen extends AppCompatActivity {
         questionArrayList = new ArrayList<>();
         questionAdapter = new QuestionAdapter(this, questionArrayList);
         btnBackAdminScreenFromQuestionListScreen = findViewById(R.id.btnBackAdminScreenFromQuestionListScreen);
+        btnAddQuestion = findViewById(R.id.btnAddQuestion);
 
         btnBackAdminScreenFromQuestionListScreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,11 +51,15 @@ public class QuestionManagementScreen extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("questions").addSnapshotListener(((value, error) -> {
-            if(error != null) return;
+            if(error != null || value == null) {
+                Toast.makeText(getApplicationContext(), "không load được dữ liệu", Toast.LENGTH_SHORT).show();
+                return;
+            }
             questionArrayList.clear();
             for (QueryDocumentSnapshot documentSnapshot : value)
             {
                 Question question = documentSnapshot.toObject(Question.class);
+                question.setQuestionId(documentSnapshot.getId());
                 questionArrayList.add(question);
             }
             questionAdapter.notifyDataSetChanged();
@@ -62,6 +68,15 @@ public class QuestionManagementScreen extends AppCompatActivity {
 
         ListView lsvQuestion = findViewById(R.id.listViewQuestion);
         lsvQuestion.setAdapter(questionAdapter);
+
+
+        btnAddQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(QuestionManagementScreen.this, AddQuestionScreen.class);
+                startActivity(it);
+            }
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

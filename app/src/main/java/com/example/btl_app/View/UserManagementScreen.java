@@ -39,21 +39,17 @@ public class UserManagementScreen extends AppCompatActivity {
         btnBackAdminScreen = findViewById(R.id.btnBackAdminScreenFromUserListScreen);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").get().addOnCompleteListener(task ->
-        {
-            if(task.isSuccessful())
+        db.collection("users").addSnapshotListener(((value, error) -> {
+            if(error != null) return;
+            listUser.clear();
+            for (QueryDocumentSnapshot documentSnapshot : value)
             {
-                listUser.clear();
-                for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                    User user = documentSnapshot.toObject(User.class);
-                    listUser.add(user);
-                }
-                adapter.notifyDataSetChanged();
-            }else{
-                Log.e("Error", "lỗi fetch user", task.getException());
+                User user = documentSnapshot.toObject(User.class);
+                listUser.add(user);
             }
 
-        });
+            adapter.notifyDataSetChanged();
+        }));
 
 
         ListView lsvUser = findViewById(R.id.listViewUser);
