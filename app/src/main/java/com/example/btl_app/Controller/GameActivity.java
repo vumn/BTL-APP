@@ -1,5 +1,6 @@
 package com.example.btl_app.Controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -9,34 +10,33 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.btl_app.Model.Question;
 import com.example.btl_app.R;
+import com.example.btl_app.View.ChangeScreenNextQuestion;
+import com.example.btl_app.View.HomeUser;
 import com.google.firebase.firestore.*;
 
 import java.util.*;
 
 public class GameActivity extends AppCompatActivity {
 
-    // ===== SESSION + STATS =====
+
     private String sessionId;
     private List<String> lifelinesUsed = new ArrayList<>();
     private int correctAnswers = 0;
     private int wrongAnswers = 0;
 
-    // ===== UI =====
+
     private TextView tvQuestionNumber, tvPrize, tvQuestionContent;
     private Button btnAnsA, btnAnsB, btnAnsC, btnAnsD;
     private ImageButton btn5050, btnExpert, btnStatistic, btnCall;
 
-    // ===== DATA =====
+
     private List<Question> allQuestions;
     private List<Question> playQuestions;
     private int currentQuestionIndex = 0;
     private Question currentQuestion;
 
-    private final String[] PRIZES = {
-            "$100", "$200", "$300", "$500", "$1,000",
-            "$2,000", "$4,000", "$8,000", "$16,000", "$32,000",
-            "$64,000", "$125,000", "$250,000", "$500,000", "$1,000,000"
-    };
+    private boolean isLeavingGame = true;
+
 
     // LIFECYCLE
     @Override
@@ -54,7 +54,9 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (sessionId != null) {
+        super.onDestroy();
+
+        if (isLeavingGame && sessionId != null) {
             updateGameSession("quit");
         }
     }
@@ -130,7 +132,7 @@ public class GameActivity extends AppCompatActivity {
         currentQuestion = playQuestions.get(currentQuestionIndex);
 
         tvQuestionNumber.setText("Câu " + (currentQuestionIndex + 1) + "/15");
-        tvPrize.setText("Thưởng: " + PRIZES[currentQuestionIndex]);
+        tvPrize.setText("Thưởng: " + getMoney());
         tvQuestionContent.setText(currentQuestion.getContent());
 
         List<String> ans = currentQuestion.getAnswers();
@@ -159,7 +161,21 @@ public class GameActivity extends AppCompatActivity {
 
             if (currentQuestionIndex < 15) {
                 updateGameSession("playing");
-                showResultDialog("Đúng!", "Tiếp tục?", true, false);
+                Intent intent =
+                        new Intent(GameActivity.this,
+                                ChangeScreenNextQuestion.class);
+
+                intent.putExtra(
+                        "currentIndex",
+                        currentQuestionIndex
+                );
+
+                isLeavingGame = false;
+                startActivityForResult(intent, 100);
+                overridePendingTransition(
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out
+                );
             } else {
                 updateGameSession("win");
                 updateStatistics(true);
@@ -181,6 +197,27 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onActivityResult(
+            int requestCode,
+            int resultCode,
+            Intent data) {
+
+        super.onActivityResult(
+                requestCode,
+                resultCode,
+                data);
+
+        if (requestCode == 100 &&
+                resultCode == RESULT_OK) {
+
+            isLeavingGame = true;
+
+            loadCurrentQuestion();
+        }
+    }
+
     private void showResultDialog(String title, String message, boolean isCorrect, boolean isWin) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
@@ -188,11 +225,24 @@ public class GameActivity extends AppCompatActivity {
         builder.setCancelable(false);
 
         if (isWin) {
-            builder.setPositiveButton("Kết thúc", (d, w) -> finish());
-        } else if (isCorrect) {
-            builder.setPositiveButton("Tiếp tục", (d, w) -> loadCurrentQuestion());
+            builder.setPositiveButton("Kết thúc", (d, w) -> {
+                Intent intent =
+                        new Intent(GameActivity.this,
+                                HomeUser.class);
+                startActivity(intent);
+
+                finish();
+            });
         } else {
-            builder.setPositiveButton("Thoát", (d, w) -> finish());
+            builder.setPositiveButton("Về menu", (d, w) -> {
+
+                Intent intent =
+                        new Intent(GameActivity.this,
+                                HomeUser.class);
+                startActivity(intent);
+
+                finish();
+            });
         }
 
         builder.show();
@@ -216,6 +266,8 @@ public class GameActivity extends AppCompatActivity {
             Collections.shuffle(wrong);
             wrong.get(0).setVisibility(View.INVISIBLE);
             wrong.get(1).setVisibility(View.INVISIBLE);
+
+            btn5050.setVisibility(View.INVISIBLE);
         });
 
         btnExpert.setOnClickListener(v -> {
@@ -227,7 +279,10 @@ public class GameActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setTitle("Chuyên gia")
                     .setMessage("Đáp án: " + (char) ('A' + correct))
+                    .setPositiveButton("Ok", (d, w) -> {
+                    })
                     .show();
+            btnExpert.setVisibility(View.INVISIBLE);
         });
 
         btnCall.setOnClickListener(v -> {
@@ -240,7 +295,10 @@ public class GameActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setTitle("Gọi điện")
                     .setMessage("Chọn: " + (char) ('A' + answer))
+                    .setPositiveButton("Ok", (d, w) -> {
+                    })
                     .show();
+            btnCall.setVisibility(View.INVISIBLE);
         });
 
         btnStatistic.setOnClickListener(v -> {
@@ -270,7 +328,10 @@ public class GameActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setTitle("Khán giả")
                     .setMessage(msg)
+                    .setPositiveButton("Ok", (d, w) -> {
+                    })
                     .show();
+            btnStatistic.setVisibility(View.INVISIBLE);
         });
     }
 

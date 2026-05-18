@@ -47,6 +47,7 @@ public class LoginAnhRegister extends AppCompatActivity {
     private ImageButton imgBtnSelectAvarta;
     private String role;
 
+    private ImageButton imgButtonBack;
     // Khởi tạo Launcher để chọn ảnh
     private final ActivityResultLauncher<String> selectImageLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
@@ -64,7 +65,7 @@ public class LoginAnhRegister extends AppCompatActivity {
         setContentView(R.layout.activity_login_anh_register);
 
         mAuth = FirebaseAuth.getInstance();
-
+        imgButtonBack = findViewById(R.id.imgBack);
         txtEmailSignIn = findViewById(R.id.txtUsername);
         txtPassSignIn = findViewById(R.id.txtPassword);
         btnLogin = findViewById(R.id.btnLogin);
@@ -93,6 +94,15 @@ public class LoginAnhRegister extends AppCompatActivity {
 
         // Mở dialog đăng ký
         btnOpenRegisterForm.setOnClickListener(v -> showDialogRegister());
+
+        imgButtonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(LoginAnhRegister.this, MainActivity.class);
+                it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(it);
+            }
+        });
     }
 
     private void checkInput() {
@@ -116,35 +126,30 @@ public class LoginAnhRegister extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Tạm dừng 1 chút trước khi chuyển màn hình (Theo ý tưởng code cũ của bạn)
-                        new android.os.Handler(getMainLooper()).postDelayed(() -> {
-                            Log.d("Main", "SignInUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(this, "Login: " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                        Log.d("Main", "SignInUserWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        Toast.makeText(this, "Login: " + user.getEmail(), Toast.LENGTH_SHORT).show();
 
-                            // Đừng quên ẩn Progressbar
+
+                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                        db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
                             progressBar.setVisibility(View.GONE);
 
-                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                            db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
-                               if(documentSnapshot.exists())
-                               {
-                                   role = documentSnapshot.getString("role");
-                                   if(role.equals("admin"))
-                                   {
-                                       Intent it = new Intent(LoginAnhRegister.this, HomeAdmin.class);
-                                       startActivity(it);
-                                       finish();
-                                   }else if(role.equals("user")){
-                                       Intent it = new Intent(LoginAnhRegister.this, HomeUser.class);
-                                       startActivity(it);
-                                       finish();
-                                   }
-                               }
-                            });
-                        }, 2000);
+                            if (documentSnapshot.exists()) {
+                                role = documentSnapshot.getString("role");
+                                if (role.equals("admin")) {
+                                    Intent it = new Intent(LoginAnhRegister.this, HomeAdmin.class);
+                                    startActivity(it);
+                                    finish();
+                                } else if (role.equals("user")) {
+                                    Intent it = new Intent(LoginAnhRegister.this, HomeUser.class);
+                                    startActivity(it);
+                                    finish();
+                                }
+                            }
+                        });
                     } else {
                         progressBar.setVisibility(View.GONE);
                         Log.w("Main", task.getException().getMessage());
@@ -163,7 +168,7 @@ public class LoginAnhRegister extends AppCompatActivity {
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
 
-        // TẠO BIẾN CỤC BỘ CHO CÁC VIEW TRONG DIALOG ĐỂ TRÁNH XUNG ĐỘT
+
         imgBtnSelectAvarta = dialog.findViewById(R.id.ImgBtnAvarta);
         Button btnOKRegister = dialog.findViewById(R.id.btnOKRegister);
         Button btnCancelDialog = dialog.findViewById(R.id.btnCancelRegister);
@@ -173,7 +178,7 @@ public class LoginAnhRegister extends AppCompatActivity {
         EditText txtRePassReg = dialog.findViewById(R.id.txtRePasswordRegister);
         TextView txtErrorRePassMsg = dialog.findViewById(R.id.txtErrorRePass);
 
-        // --- SỰ KIỆN CHỌN ẢNH AVATAR ---
+
         imgBtnSelectAvarta.setOnClickListener(v -> {
             selectImageLauncher.launch("image/*");
         });

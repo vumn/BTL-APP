@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BTLAPP">
         <activity
+            android:name=".View.StatisticsUser"
+            android:exported="false" />
+        <activity
+            android:name=".View.ChangeScreenNextQuestion"
+            android:exported="false" />
+        <activity
             android:name=".View.AddQuestionScreen"
             android:exported="false" />
         <activity
