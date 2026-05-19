@@ -38,6 +38,8 @@
         android:layout_marginTop="96dp"
         android:autofillHints="@string/prompt_email"
         android:hint="@string/prompt_email"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
         android:inputType="textEmailAddress"
         android:selectAllOnFocus="true" />
 
@@ -48,6 +50,8 @@
         android:layout_marginTop="15dp"
         android:autofillHints="@string/prompt_password"
         android:hint="@string/prompt_password"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
         android:inputType="textPassword"

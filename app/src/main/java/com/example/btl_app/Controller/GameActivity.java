@@ -37,7 +37,18 @@ public class GameActivity extends AppCompatActivity {
 
     private boolean isLeavingGame = true;
 
+    // Turn on music
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SoundManager.playBgMusic(this);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SoundManager.stopBgMusic();
+    }
     // LIFECYCLE
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +65,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        super.onDestroy();
+//        super.onDestroy();
 
         if (isLeavingGame && sessionId != null) {
             updateGameSession("quit");
@@ -155,7 +166,7 @@ public class GameActivity extends AppCompatActivity {
     private void checkAnswer(int selectedIndex) {
 
         if (selectedIndex == currentQuestion.getCorrectIndex()) {
-
+            SoundManager.playCorrectSound(this);
             correctAnswers++;
             currentQuestionIndex++;
 
@@ -183,7 +194,7 @@ public class GameActivity extends AppCompatActivity {
             }
 
         } else {
-
+            SoundManager.playWrongSound(this);
             wrongAnswers++;
 
             updateGameSession("lose");
