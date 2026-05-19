@@ -7,6 +7,18 @@
     android:background="@drawable/bg_trieuphu"
     android:padding="16dp"
     >
+
+
+    <ImageButton
+        android:id="@+id/ImgMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/menu_icon"
+        android:background="#ddb669"
+        />
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
