@@ -4,6 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
+import android.app.Dialog;
+import android.view.Window;
+import android.view.ViewGroup;
+
+import com.example.btl_app.View.HomeUser;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.btl_app.Model.Question;
 import com.example.btl_app.R;
 import com.example.btl_app.View.ChangeScreenNextQuestion;
-import com.example.btl_app.View.HomeUser;
 import com.google.firebase.firestore.*;
 
 import java.util.*;
@@ -25,9 +29,10 @@ public class GameActivity extends AppCompatActivity {
     private int wrongAnswers = 0;
 
 
+
     private TextView tvQuestionNumber, tvPrize, tvQuestionContent;
     private Button btnAnsA, btnAnsB, btnAnsC, btnAnsD;
-    private ImageButton btn5050, btnExpert, btnStatistic, btnCall;
+    private ImageButton btn5050, btnExpert, btnStatistic, btnCall, btnMenu;
 
 
     private List<Question> allQuestions;
@@ -87,6 +92,7 @@ public class GameActivity extends AppCompatActivity {
         btnExpert = findViewById(R.id.btnExpertGame);
         btnStatistic = findViewById(R.id.btnStatisticGame);
         btnCall = findViewById(R.id.btnCallGame);
+        btnMenu = findViewById(R.id.ImgMenu);
     }
 
     // LOAD DATA
@@ -190,7 +196,7 @@ public class GameActivity extends AppCompatActivity {
             } else {
                 updateGameSession("win");
                 updateStatistics(true);
-                showResultDialog("Chiến thắng!", "Bạn đã thắng!", true, true);
+                showWinDialog();
             }
 
         } else {
@@ -235,16 +241,7 @@ public class GameActivity extends AppCompatActivity {
         builder.setMessage(message);
         builder.setCancelable(false);
 
-        if (isWin) {
-            builder.setPositiveButton("Kết thúc", (d, w) -> {
-                Intent intent =
-                        new Intent(GameActivity.this,
-                                HomeUser.class);
-                startActivity(intent);
-
-                finish();
-            });
-        } else {
+        if (!isWin) {
             builder.setPositiveButton("Về menu", (d, w) -> {
 
                 Intent intent =
@@ -254,9 +251,58 @@ public class GameActivity extends AppCompatActivity {
 
                 finish();
             });
+            finish();
         }
 
         builder.show();
+    }
+
+    private void showWinDialog() {
+
+        Dialog dialog = new Dialog(this);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        dialog.setContentView(R.layout.custom_dialog);
+
+        dialog.setCancelable(false);
+
+        Window window = dialog.getWindow();
+
+        if (window != null) {
+
+            window.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+
+            window.setBackgroundDrawableResource(
+                    android.R.color.transparent
+            );
+        }
+
+        Button btnContinue =
+                dialog.findViewById(R.id.btnContinueWin);
+
+        btnContinue.setOnClickListener(v -> {
+
+            Intent intent =
+                    new Intent(GameActivity.this,
+                            HomeUser.class);
+
+            intent.setFlags(
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                            Intent.FLAG_ACTIVITY_NEW_TASK
+            );
+
+            startActivity(intent);
+
+            finish();
+
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
     // LIFELINES

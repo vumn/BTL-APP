@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="20dp"
+    android:background="@drawable/bg_dialog_win">
+
+    <LinearLayout
+        android:id="@+id/layoutTitle"
+        android:layout_width="260dp"
+        android:layout_height="70dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-10dp"
+        android:gravity="center"
+        android:background="@drawable/bg_title_win">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="THÀNH TÍCH"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="28sp"/>
+    </LinearLayout>
+
+    <!-- MESSAGE -->
+    <TextView
+        android:id="@+id/txtMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layoutTitle"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="Chúc mừng Trần Mạnh nhận được phần thưởng"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"/>
+
+    <!-- MONEY -->
+    <TextView
+        android:id="@+id/txtMoney"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtMessage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="2.000.000"
+        android:textColor="#FFD700"
+        android:textStyle="bold"
+        android:textSize="72sp"
+        android:shadowColor="#FFA000"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="10"/>
+
+    <!-- FIREWORK -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieFirework"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/txtMoney"
+        android:layout_marginTop="-120dp"
+        android:alpha="0.95"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_fileName="fireworks.json"/>
+
+    <!-- TIME -->
+    <TextView
+        android:id="@+id/txtTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtMoney"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp"
+        android:text="Tổng thời gian: 25 giây"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"/>
+
+    <!-- BUTTONS -->
+    <LinearLayout
+        android:id="@+id/layoutButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtTime"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnContinueWin"
+            android:layout_width="180dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/bg_button_continue"
+            android:text="Tiếp tục"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/btnWin"
+            android:layout_width="180dp"
+            android:layout_height="70dp"
+            android:background="@drawable/bg_button_continue"
+            android:text="Quay lại"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+</RelativeLayout>
