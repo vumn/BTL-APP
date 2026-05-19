@@ -185,6 +185,7 @@ public class LoginAnhRegister extends AppCompatActivity {
 
         // Hủy Dialog
         btnCancelDialog.setOnClickListener(view -> {
+            selectedImageUri = null;
             dialog.dismiss();
             Toast.makeText(getApplicationContext(), "Đã hủy", Toast.LENGTH_SHORT).show();
         });

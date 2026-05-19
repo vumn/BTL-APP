@@ -29,7 +29,6 @@ public class GameActivity extends AppCompatActivity {
     private int wrongAnswers = 0;
 
 
-
     private TextView tvQuestionNumber, tvPrize, tvQuestionContent;
     private Button btnAnsA, btnAnsB, btnAnsC, btnAnsD;
     private ImageButton btn5050, btnExpert, btnStatistic, btnCall, btnMenu;
@@ -54,11 +53,63 @@ public class GameActivity extends AppCompatActivity {
 
         setAnswerClickListener();
         setHelpClickListener();
+
+        setClickOnMenu();
+    }
+
+    private void setClickOnMenu() {
+        btnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMenuDuringPlayGame();
+            }
+        });
+    }
+
+    private void showMenuDuringPlayGame() {
+        Dialog dialog = new Dialog(this);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        dialog.setContentView(R.layout.custom_menu_dialog);
+
+        dialog.setCancelable(false);
+
+        Window window = dialog.getWindow();
+
+        if (window != null) {
+
+            window.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+
+            window.setBackgroundDrawableResource(
+                    android.R.color.transparent
+            );
+        }
+
+        Button btnContinue =
+                dialog.findViewById(R.id.btnContinueWin);
+
+        btnContinue.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        Button btnBackHome = dialog.findViewById(R.id.btnBackHome);
+
+        btnBackHome.setOnClickListener(v -> {
+            Intent it = new Intent(GameActivity.this, HomeUser.class);
+            it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(it);
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         super.onDestroy();
 
         if (isLeavingGame && sessionId != null) {
