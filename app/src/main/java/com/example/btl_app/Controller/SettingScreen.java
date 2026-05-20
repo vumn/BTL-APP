@@ -1,11 +1,12 @@
 package com.example.btl_app.Controller;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,28 +19,61 @@ import com.example.btl_app.View.HomeUser;
 
 public class SettingScreen extends AppCompatActivity {
 
+    private Switch switchSoundEnabled, switchSoundCorrect, switchSoundWrong, switchSoundMenu;
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_setting_screen);
 
-        ImageView btnBackFromSettingScreenToHomeUser = findViewById(R.id.btnClose);
+        // Khởi tạo SharedPreferences
+        sharedPreferences = getSharedPreferences("GameSettings", Context.MODE_PRIVATE);
 
-        btnBackFromSettingScreenToHomeUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent it = new Intent(SettingScreen.this, HomeUser.class);
-                it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(it);
-            }
+        // Ánh xạ View
+        switchSoundEnabled = findViewById(R.id.soundEnabled);
+        switchSoundCorrect = findViewById(R.id.soundCorrect);
+        switchSoundWrong = findViewById(R.id.soundWrong);
+        switchSoundMenu = findViewById(R.id.soundMenu);
+        ImageView btnBack = findViewById(R.id.btnClose);
+
+        // Load trạng thái đã lưu trước đó (mặc định là true/bật)
+        switchSoundEnabled.setChecked(sharedPreferences.getBoolean("soundEnabled", true));
+        switchSoundCorrect.setChecked(sharedPreferences.getBoolean("soundCorrect", true));
+        switchSoundWrong.setChecked(sharedPreferences.getBoolean("soundWrong", true));
+        switchSoundMenu.setChecked(sharedPreferences.getBoolean("soundMenu", true));
+
+        // Lắng nghe sự kiện thay đổi để lưu lại
+        switchSoundEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            saveSetting("soundEnabled", isChecked);
+            // Nếu tắt âm thanh tổng, có thể tắt luôn nhạc nền đang chạy (gọi SoundManager)
+            if(!isChecked) SoundManager.stopBgMusic();
+            else SoundManager.playBgMusic(this);
         });
 
+        switchSoundCorrect.setOnCheckedChangeListener((b, isChecked) -> saveSetting("soundCorrect", isChecked));
+        switchSoundWrong.setOnCheckedChangeListener((b, isChecked) -> saveSetting("soundWrong", isChecked));
+        switchSoundMenu.setOnCheckedChangeListener((b, isChecked) -> saveSetting("soundMenu", isChecked));
+
+        // Nút Back
+        btnBack.setOnClickListener(view -> {
+            Intent it = new Intent(SettingScreen.this, HomeUser.class);
+            it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(it);
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    // Hàm hỗ trợ lưu SharedPreferences
+    private void saveSetting(String key, boolean value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
     }
 }

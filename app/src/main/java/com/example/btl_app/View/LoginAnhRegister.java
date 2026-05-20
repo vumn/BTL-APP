@@ -22,6 +22,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
 import com.example.btl_app.MainActivity;
 import com.example.btl_app.Model.User;
 import com.example.btl_app.R;
@@ -33,6 +36,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginAnhRegister extends AppCompatActivity {
 
@@ -63,6 +68,19 @@ public class LoginAnhRegister extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_anh_register);
+        try {
+            Map config = new HashMap();
+
+            config.put("cloud_name", "dyk0npwps");
+            config.put("api_key", "281138324151346");
+            config.put("api_secret", "Svi66Q_E0F6ICOEF9OWFazj3tBM");
+
+            MediaManager.init(this, config);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
 
         mAuth = FirebaseAuth.getInstance();
         imgButtonBack = findViewById(R.id.imgBack);
@@ -216,9 +234,11 @@ public class LoginAnhRegister extends AppCompatActivity {
                                     saveUserToFirebase(userId, userName, "");
                                 }
                                 Toast.makeText(getApplicationContext(), "Register: " + firebaseUser.getEmail(), Toast.LENGTH_SHORT).show();
+                                Log.d("avatar", "upload success");
                                 dialog.dismiss(); // Đăng ký thành công thì đóng dialog
                             } else {
                                 Toast.makeText(getApplicationContext(), "Register failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.e("avatar", "upload fail");
                             }
                         });
             } else {
@@ -231,16 +251,59 @@ public class LoginAnhRegister extends AppCompatActivity {
         dialog.show();
     }
 
-    private void saveUserToFirebase(String userId, String userName, String s) {
-        User user = new User(userId, userName, s, "user", new Date());
-        FirebaseFirestore.getInstance().collection("users").document(userId).set(user).addOnSuccessListener(unused -> Log.d("FireStore", "user saved")).addOnFailureListener(e -> Log.d("Firestore", "Error" + e.getMessage()));
+    private void saveUserToFirebase(String userId, String userName, String avatarUrl) {
+        User user = new User(userId, userName, avatarUrl, "user", new Date());
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(userId)
+                .set(user)
+                .addOnSuccessListener(unused ->
+                        Log.d("Firestore", "✅ User saved successfully"))
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "❌ Error saving user: " + e.getMessage());
+                    Toast.makeText(getApplicationContext(),
+                            "Lỗi lưu user: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
     }
 
     private void uploadAvartaAndSaveUser(String userId, String userName, Uri selectedImageUri) {
-        StorageReference reference = FirebaseStorage.getInstance().getReference("avatars/" + userId + ".jpg");
-        reference.putFile(selectedImageUri).addOnSuccessListener(taskSnapshot -> reference.getDownloadUrl().addOnSuccessListener(uri -> {
-            String selectImageUri = uri.toString();
-            saveUserToFirebase(userId, userName, selectImageUri);
-        })).addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Upload ảnh lỗi!", Toast.LENGTH_SHORT).show());
+        MediaManager.get().upload(selectedImageUri)
+                .callback(new UploadCallback() {
+                    @Override
+                    public void onStart(String requestId) {
+
+                    }
+
+                    @Override
+                    public void onProgress(String requestId, long bytes, long totalBytes) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(String requestId, Map resultData) {
+
+                        String imageUrl = resultData.get("secure_url").toString();
+                        Log.d("Cloudinary", imageUrl);
+
+                        saveUserToFirebase(userId, userName, imageUrl);
+                    }
+
+                    @Override
+                    public void onError(String requestId, ErrorInfo error) {
+                        Log.e("Cloudinary",
+                                error.getDescription());
+
+                        Toast.makeText(
+                                getApplicationContext(),
+                                error.getDescription(),
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+
+                    @Override
+                    public void onReschedule(String requestId, ErrorInfo error) {
+
+                    }
+                }).dispatch();
     }
 }

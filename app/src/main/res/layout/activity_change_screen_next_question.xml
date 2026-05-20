@@ -6,7 +6,7 @@
     android:background="@drawable/bg_trieuphu">
 
     <LinearLayout
-        android:layout_width="300dp"
+        android:layout_width="250dp"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:background="#0033CC"
@@ -17,7 +17,7 @@
             android:id="@+id/recyclerMoney"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="90dp"
+            android:paddingTop="70dp"
             android:paddingStart="10dp"/>
 
     </LinearLayout>

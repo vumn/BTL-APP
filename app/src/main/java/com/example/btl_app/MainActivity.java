@@ -8,11 +8,30 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.btl_app.Controller.GameActivity;
+import com.example.btl_app.Controller.SoundManager;
 import com.example.btl_app.View.LoginAnhRegister;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnPlay;
     private Button btnLogin;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Chắc chắn rằng nhạc trong game đã tắt trước khi bật nhạc Menu
+        SoundManager.stopBgMusic();
+
+        // Bật nhạc Menu
+        SoundManager.playMenuMusic(this);
+    }
+
+    // Hàm này chạy khi người dùng rời khỏi màn hình Menu (Vào game, vào setting, ẩn app...)
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Tạm dừng nhạc Menu
+        SoundManager.stopMenuMusic();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

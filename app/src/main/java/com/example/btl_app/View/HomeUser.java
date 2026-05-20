@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.btl_app.Controller.GameActivity;
 import com.example.btl_app.Controller.SettingScreen;
 import com.example.btl_app.Controller.StatistcScreen;
@@ -31,18 +33,21 @@ import kotlin.internal.HidesMembers;
 
 public class HomeUser extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
+    private CircleImageView btnAvatar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home_user);
 
-        CircleImageView btnAvatar = findViewById(R.id.Avatar);
+        btnAvatar = findViewById(R.id.Avatar);
+
+        initAvatar();
 
         btnAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 PopupMenu popupMenu = new PopupMenu(HomeUser.this, view);
                 popupMenu.setOnMenuItemClickListener(HomeUser.this);
                 popupMenu.inflate(R.menu.profile_menu);
@@ -87,6 +92,25 @@ public class HomeUser extends AppCompatActivity implements PopupMenu.OnMenuItemC
         });
     }
 
+    private void initAvatar() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+        String userId = user.getUid();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                String imageUri = documentSnapshot.getString("imageUri");
+
+                //load avatar
+                if (imageUri != null && !imageUri.isEmpty()) {
+                    Glide.with(HomeUser.this).load(imageUri).into(btnAvatar);
+                }
+
+            }
+        });
+    }
+
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         int id = menuItem.getItemId();
@@ -110,7 +134,6 @@ public class HomeUser extends AppCompatActivity implements PopupMenu.OnMenuItemC
         Intent it = new Intent(HomeUser.this, MainActivity.class);
         it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(it);
-        finish();
         Toast.makeText(getApplicationContext(), "Log out thành công", Toast.LENGTH_SHORT).show();
     }
 }
