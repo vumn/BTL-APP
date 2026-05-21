@@ -65,6 +65,25 @@ public class GameActivity extends AppCompatActivity {
     private List<String> lifelinesUsed = new ArrayList<>();
     private boolean isLeavingGame = true;
 
+    // Lấy thời gian đã cài đặt (trả về 30 nếu người dùng chưa từng cài đặt)
+    SharedPreferences prefs = getSharedPreferences("GameSettings", Context.MODE_PRIVATE);
+    int questionTimeInSeconds = prefs.getInt("questionTime", 30);
+
+    // Đổi ra milliseconds để dùng cho CountDownTimer (ví dụ: 30 * 1000 = 30,000 ms)
+    long timeInMillis = questionTimeInSeconds * 1000L;
+
+    // Sử dụng timeInMillis cho CountDownTimer của bạn
+    CountDownTimer myTimer = new CountDownTimer(timeInMillis, 1000) {
+        public void onTick(long millisUntilFinished) {
+            // Cập nhật giao diện đồng hồ: millisUntilFinished / 1000
+        }
+
+        public void onFinish() {
+            // Hết giờ -> Báo thua hoặc chuyển câu
+        }
+    }.start();
+    
+
     //Lifecycle
 
     @Override
