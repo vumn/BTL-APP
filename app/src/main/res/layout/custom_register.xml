@@ -2,7 +2,7 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="640dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,6 +16,7 @@
             android:id="@+id/lblTitleDialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:text="Đăng ký"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -25,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:textColor="@color/black"
             android:text="Nhập tên:"
             android:textSize="15sp" />
 
@@ -33,9 +35,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nhập tên người dùng"
-            android:textColorHint="@color/black"
-            android:textColor="@color/black"
             android:padding="10dp"
+            android:textColor="@color/material_dynamic_neutral30"
+            android:textColorHint="@color/material_dynamic_neutral30"
             android:textSize="15sp" />
 
         <TextView
@@ -43,6 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:textColor="@color/black"
             android:text="Nhập Email:"
             android:textSize="15sp" />
 
@@ -51,8 +54,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nhập email"
-            android:textColorHint="@color/black"
-            android:textColor="@color/black"
+            android:textColorHint="@color/material_dynamic_neutral30"
+            android:textColor="@color/material_dynamic_neutral30"
             android:inputType="textEmailAddress"
             android:padding="10dp"
             android:textSize="15sp" />
@@ -63,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="Nhập Password:"
+            android:textColor="@color/black"
             android:textSize="15sp" />
 
         <EditText
@@ -70,8 +74,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nhập password"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
+            android:textColor="@color/material_dynamic_neutral30"
+            android:textColorHint="@color/material_dynamic_neutral30"
             android:inputType="textPassword"
             android:padding="10dp"
             android:textSize="15sp" />
@@ -80,6 +84,7 @@
             android:id="@+id/lblRePasswordRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:layout_marginTop="12dp"
             android:text="Nhập lại Password:"
             android:textSize="15sp" />
@@ -89,8 +94,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nhập lại password"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
+            android:textColor="@color/material_dynamic_neutral30"
+            android:textColorHint="@color/material_dynamic_neutral30"
             android:inputType="textPassword"
             android:padding="10dp"
             android:textSize="15sp" />

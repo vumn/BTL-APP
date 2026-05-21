@@ -17,7 +17,6 @@
             android:id="@+id/recyclerMoney"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="70dp"
             android:paddingStart="10dp"/>
 
     </LinearLayout>

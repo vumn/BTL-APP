@@ -41,24 +41,41 @@ public class SoundManager {
 
     // 1. CHƠI NHẠC NỀN
     public static void playBgMusic(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("GameSettings", Context.MODE_PRIVATE);
-        boolean isSoundEnabled = prefs.getBoolean("soundEnabled", true);
+        SharedPreferences prefs =
+                context.getSharedPreferences("GameSettings",
+                        Context.MODE_PRIVATE);
 
-        if (isSoundEnabled) {
-            if (bgMediaPlayer == null) {
-                bgMediaPlayer = MediaPlayer.create(context, R.raw.bg_music);
-                bgMediaPlayer.setLooping(true); // Lặp lại nhạc nền
-            }
-            if (!bgMediaPlayer.isPlaying()) {
-                bgMediaPlayer.start();
-            }
+        boolean isSoundEnabled =
+                prefs.getBoolean("soundEnabled", true);
+
+        if (!isSoundEnabled) return;
+
+        if (bgMediaPlayer == null) {
+
+            bgMediaPlayer =
+                    MediaPlayer.create(
+                            context.getApplicationContext(),
+                            R.raw.bg_music
+                    );
+
+            bgMediaPlayer.setLooping(true);
+        }
+
+        if (!bgMediaPlayer.isPlaying()) {
+            bgMediaPlayer.start();
         }
     }
 
     // DỪNG NHẠC NỀN
     public static void stopBgMusic() {
-        if (bgMediaPlayer != null && bgMediaPlayer.isPlaying()) {
-            bgMediaPlayer.pause();
+        if (bgMediaPlayer != null) {
+
+            if (bgMediaPlayer.isPlaying()) {
+                bgMediaPlayer.stop();
+            }
+
+            bgMediaPlayer.release();
+            bgMediaPlayer = null;
         }
     }
 

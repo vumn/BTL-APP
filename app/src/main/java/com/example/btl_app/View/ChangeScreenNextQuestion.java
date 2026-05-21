@@ -12,6 +12,7 @@ import com.example.btl_app.Model.MoneyItem;
 import com.example.btl_app.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ChangeScreenNextQuestion extends AppCompatActivity {
@@ -48,20 +49,18 @@ public class ChangeScreenNextQuestion extends AppCompatActivity {
         }, 1500);
     }
 
-    private void setupMoneyBoard(int currentIndex) {
+    private void setupMoneyBoard(int currentQuestionIndex) {
 
         List<MoneyItem> list = new ArrayList<>();
 
-        // Hiển thị từ 1 -> 15
-        for (int i = 0; i < 15; i++) {
+        for (int i = PRIZES.length - 1; i >= 0; i--) {
 
-            // Highlight câu hiện tại
-            boolean selected = (i == currentIndex);
+            boolean selected =
+                    i == currentQuestionIndex;
 
-            String text =
-                    (i + 1) + "   " + PRIZES[i];
-
-            list.add(new MoneyItem(text, selected));
+            list.add(new MoneyItem(
+                    PRIZES[i],
+                    selected));
         }
 
         MoneyAdapter adapter =
@@ -71,8 +70,5 @@ public class ChangeScreenNextQuestion extends AppCompatActivity {
                 new LinearLayoutManager(this));
 
         recyclerMoney.setAdapter(adapter);
-
-        // Scroll tới câu hiện tại
-        recyclerMoney.scrollToPosition(currentIndex);
     }
 }

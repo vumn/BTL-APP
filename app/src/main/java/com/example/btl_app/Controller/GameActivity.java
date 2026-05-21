@@ -3,9 +3,12 @@ package com.example.btl_app.Controller;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -19,6 +22,7 @@ import com.example.btl_app.R;
 import com.example.btl_app.View.ChangeScreenNextQuestion;
 import com.example.btl_app.View.HomeUser;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -44,6 +48,7 @@ public class GameActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private String userId;
     private String sessionId;
+    private String username;
 
     //UI
     private TextView tvQuestionNumber, tvPrize, tvQuestionContent;
@@ -77,7 +82,6 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        SoundManager.releaseBgMusic();
         super.onDestroy();
         if (isLeavingGame && sessionId != null) {
             updateGameSession("quit");
@@ -92,6 +96,7 @@ public class GameActivity extends AppCompatActivity {
             loadCurrentQuestion();
         }
     }
+
 
     //Init
 
@@ -108,7 +113,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void initViews() {
         tvQuestionNumber = findViewById(R.id.tvQuestionNumber);
-        tvPrize         = findViewById(R.id.tvPrize);
+        tvPrize = findViewById(R.id.tvPrize);
         tvQuestionContent = findViewById(R.id.tvQuestionContent);
 
         btnAnsA = findViewById(R.id.btnAnswerA);
@@ -116,14 +121,94 @@ public class GameActivity extends AppCompatActivity {
         btnAnsC = findViewById(R.id.btnAnswerC);
         btnAnsD = findViewById(R.id.btnAnswerD);
 
-        btn5050     = findViewById(R.id.btn5050Game);
-        btnExpert   = findViewById(R.id.btnExpertGame);
+        btn5050 = findViewById(R.id.btn5050Game);
+        btnExpert = findViewById(R.id.btnExpertGame);
         btnStatistic = findViewById(R.id.btnStatisticGame);
-        btnCall     = findViewById(R.id.btnCallGame);
-        btnMenu     = findViewById(R.id.ImgMenu);
+        btnCall = findViewById(R.id.btnCallGame);
+        btnMenu = findViewById(R.id.ImgMenu);
+        SoundManager.playBgMusic(this);
     }
 
+
     //Load Data
+
+    private int getMenuMoney() {
+        if(currentQuestionIndex <= 5)
+        {
+            return 0;
+        }else if(currentQuestionIndex <= 10)
+        {
+            return MONEY_TABLE[4];
+        }else {
+            return MONEY_TABLE[9];
+        }
+    }
+
+
+    private Button getButtonByIndex(int selectedIndex) {
+        switch (selectedIndex) {
+            case 0:
+                return btnAnsA;
+
+            case 1:
+                return btnAnsB;
+
+            case 2:
+                return btnAnsC;
+
+            default:
+                return btnAnsD;
+        }
+    }
+
+
+    private void enableAllButtons() {
+        btnAnsA.setEnabled(true);
+        btnAnsB.setEnabled(true);
+        btnAnsC.setEnabled(true);
+        btnAnsD.setEnabled(true);
+    }
+
+
+    private void LoadAnswers() {
+
+        btnAnsA.setVisibility(View.VISIBLE);
+        btnAnsB.setVisibility(View.VISIBLE);
+        btnAnsC.setVisibility(View.VISIBLE);
+        btnAnsD.setVisibility(View.VISIBLE);
+
+        btnAnsA.setEnabled(true);
+        btnAnsB.setEnabled(true);
+        btnAnsC.setEnabled(true);
+        btnAnsD.setEnabled(true);
+
+        btnAnsA.setBackgroundTintList(
+                getColorStateList(R.color.blue));
+
+        btnAnsB.setBackgroundTintList(
+                getColorStateList(R.color.blue));
+
+        btnAnsC.setBackgroundTintList(
+                getColorStateList(R.color.blue));
+
+        btnAnsD.setBackgroundTintList(
+                getColorStateList(R.color.blue));
+    }
+
+    private void disableAllButtons() {
+        btnAnsA.setEnabled(false);
+        btnAnsB.setEnabled(false);
+        btnAnsC.setEnabled(false);
+        btnAnsD.setEnabled(false);
+    }
+
+    //set empty data answer
+    private void setEmptyDataAnswer() {
+        btnAnsA.setText("");
+        btnAnsB.setText("");
+        btnAnsC.setText("");
+        btnAnsD.setText("");
+    }
 
     private void replayGame() {
         isLeavingGame = false;
@@ -142,6 +227,8 @@ public class GameActivity extends AppCompatActivity {
         generatePlayQuestions();
 
         createGameSession();
+
+        LoadAnswers();
 
         loadCurrentQuestion();
     }
@@ -193,21 +280,47 @@ public class GameActivity extends AppCompatActivity {
     //Game Logic
 
     private void loadCurrentQuestion() {
-        btnExpert.setVisibility(currentQuestionIndex >= 5 ? View.VISIBLE : View.GONE);
+        setEmptyDataAnswer();
+        disableAllButtons();
+
+        //display expert button
+        if(currentQuestionIndex == 5)
+        {
+            btnExpert.setVisibility(View.VISIBLE);
+        }
 
         currentQuestion = playQuestions.get(currentQuestionIndex);
         List<String> ans = currentQuestion.getAnswers();
 
         tvQuestionNumber.setText("Câu " + (currentQuestionIndex + 1) + "/15");
-        tvPrize.setText("Thưởng: " + getMoney());
+        tvPrize.setText("Thưởng: " + getMoney() + "$");
         tvQuestionContent.setText(currentQuestion.getContent());
 
-        resetAnswerButtons();
+        LoadAnswers();
         btnAnsA.setText("A. " + ans.get(0));
-        btnAnsB.setText("B. " + ans.get(1));
-        btnAnsC.setText("C. " + ans.get(2));
-        btnAnsD.setText("D. " + ans.get(3));
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                btnAnsB.setText("B. " + ans.get(1));
+            }
+        }, 1000);
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                btnAnsC.setText("C. " + ans.get(2));
+            }
+        }, 2000);
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                btnAnsD.setText("D. " + ans.get(3));
+            }
+        }, 3000);
+        enableAllButtons();
     }
+
+
 
     private void resetAnswerButtons() {
         btnAnsA.setVisibility(View.VISIBLE);
@@ -224,36 +337,90 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void checkAnswer(int selectedIndex) {
-        if (selectedIndex == currentQuestion.getCorrectIndex()) {
-            SoundManager.playCorrectSound(this);
-            correctAnswers++;
-            currentQuestionIndex++;
 
-            if (currentQuestionIndex < 15) {
-                updateGameSession("playing");
+        SoundManager.playClickSound(this);
 
-                Intent intent = new Intent(this, ChangeScreenNextQuestion.class);
-                intent.putExtra("currentIndex", currentQuestionIndex);
+        disableAllButtons();
 
-                isLeavingGame = false;
-                startActivityForResult(intent, REQUEST_NEXT_QUESTION);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            } else {
-                updateGameSession("win");
-                updateStatistics(true);
-                showWinDialog();
-            }
+        Button selectedButton = getButtonByIndex(selectedIndex);
 
-        } else {
-            SoundManager.playWrongSound(this);
-            wrongAnswers++;
-            updateGameSession("lose");
-            updateStatistics(false);
+        // Chọn đáp án -> vàng
+        selectedButton.setBackgroundTintList(
+                getColorStateList(android.R.color.holo_orange_light));
 
-            int correct = currentQuestion.getCorrectIndex();
-            showLoseDialog("Đáp án đúng: " + (char) ('A' + correct));
-        }
+            AlphaAnimation blink =
+                    new AlphaAnimation(0.3f, 1.0f);
+
+            blink.setDuration(300);
+
+            blink.setRepeatMode(AlphaAnimation.REVERSE);
+
+            blink.setRepeatCount(3);
+
+            selectedButton.startAnimation(blink);
+
+        new android.os.Handler().postDelayed(() -> {
+
+            int correctIndex = currentQuestion.getCorrectIndex();
+
+            Button correctButton = getButtonByIndex(correctIndex);
+
+            // Đáp án đúng -> xanh
+            correctButton.setBackgroundTintList(
+                    getColorStateList(android.R.color.holo_green_light));
+
+            new android.os.Handler().postDelayed(() -> {
+
+                if (selectedIndex == correctIndex) {
+
+                    SoundManager.playCorrectSound(this);
+
+                    correctAnswers++;
+                    currentQuestionIndex++;
+
+                    if (currentQuestionIndex < 15) {
+
+                        updateGameSession("playing");
+
+                        Intent intent =
+                                new Intent(GameActivity.this,
+                                        ChangeScreenNextQuestion.class);
+
+                        intent.putExtra(
+                                "currentIndex",
+                                currentQuestionIndex
+                        );
+
+                        startActivityForResult(intent, 100);
+
+                    } else {
+
+                        updateGameSession("win");
+                        updateStatistics(true);
+
+                        showWinDialog();
+                    }
+
+                } else {
+
+                    SoundManager.playWrongSound(this);
+
+                    wrongAnswers++;
+
+                    updateGameSession("lose");
+                    updateStatistics(false);
+
+                    showLoseDialog(
+                            "Đáp án đúng: " +
+                                    (char) ('A' + correctIndex));
+                }
+
+            }, 1200);
+
+        }, 700);
+
     }
+
 
     //Dialogs
 
@@ -264,7 +431,6 @@ public class GameActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("Về menu", (d, w) -> {
                     startActivity(new Intent(this, HomeUser.class));
-                    finish();
                 })
                 .show();
     }
@@ -281,6 +447,37 @@ public class GameActivity extends AppCompatActivity {
             window.setBackgroundDrawableResource(android.R.color.transparent);
         }
 
+        TextView txtMessage = dialog.findViewById(R.id.txtMessage);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null)
+        {
+            userId = user.getUid();
+
+            db = FirebaseFirestore.getInstance();
+
+            db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot ->
+            {
+                if(documentSnapshot.exists())
+                {
+                    username = documentSnapshot.getString("userName");
+                    String str = "Chúc mừng " + username + " nhận được phần thưởng";
+
+                    txtMessage.setText(str);
+                }else {
+                    username = "Guest";
+                    String str = "Chúc mừng " + username + " nhận được phần thưởng";
+
+                    txtMessage.setText(str);
+                }
+            }).addOnFailureListener(e ->
+            {
+                e.printStackTrace();
+            });
+
+        }
+
+
         dialog.findViewById(R.id.btnContinueWin).setOnClickListener(v -> {
             dialog.dismiss();
             replayGame();
@@ -290,7 +487,6 @@ public class GameActivity extends AppCompatActivity {
             Intent intent = new Intent(this, HomeUser.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
             dialog.dismiss();
         });
 
@@ -315,7 +511,7 @@ public class GameActivity extends AppCompatActivity {
         }
 
         TextView txtMoney = dialog.findViewById(R.id.txtMoney);
-        txtMoney.setText(getMoney() + "$");
+        txtMoney.setText(getMenuMoney() + "$");
 
         dialog.findViewById(R.id.btnContinueWin).setOnClickListener(v -> dialog.dismiss());
 
@@ -440,22 +636,22 @@ public class GameActivity extends AppCompatActivity {
     private void updateStatistics(boolean isWin) {
         db.collection("statistics").document(userId).get()
                 .addOnSuccessListener(doc -> {
-                    int totalGames   = 1;
-                    int totalWins    = isWin ? 1 : 0;
-                    int totalLoses   = isWin ? 0 : 1;
+                    int totalGames = 1;
+                    int totalWins = isWin ? 1 : 0;
+                    int totalLoses = isWin ? 0 : 1;
                     int highestScore = currentQuestionIndex;
-                    int avgScore     = currentQuestionIndex;
+                    int avgScore = currentQuestionIndex;
                     int totalCorrect = correctAnswers;
-                    int totalWrong   = wrongAnswers;
+                    int totalWrong = wrongAnswers;
 
                     if (doc.exists()) {
                         int oldGames = doc.getLong("totalGames").intValue();
-                        totalGames   += oldGames;
-                        totalWins    += doc.getLong("totalWins").intValue();
-                        totalLoses   += doc.getLong("totalLoses").intValue();
-                        highestScore  = Math.max(highestScore, doc.getLong("highestScore").intValue());
+                        totalGames += oldGames;
+                        totalWins += doc.getLong("totalWins").intValue();
+                        totalLoses += doc.getLong("totalLoses").intValue();
+                        highestScore = Math.max(highestScore, doc.getLong("highestScore").intValue());
                         totalCorrect += doc.getLong("correctAnswers").intValue();
-                        totalWrong   += doc.getLong("wrongAnswers").intValue();
+                        totalWrong += doc.getLong("wrongAnswers").intValue();
 
                         int oldAvg = doc.getLong("averageScore").intValue();
                         avgScore = (oldAvg * oldGames + currentQuestionIndex) / (oldGames + 1);

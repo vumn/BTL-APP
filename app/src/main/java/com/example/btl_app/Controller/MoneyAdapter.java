@@ -1,10 +1,9 @@
 package com.example.btl_app.Controller;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.graphics.Color;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,7 +14,8 @@ import com.example.btl_app.R;
 
 import java.util.List;
 
-public class MoneyAdapter extends RecyclerView.Adapter<MoneyAdapter.ViewHolder> {
+public class MoneyAdapter
+        extends RecyclerView.Adapter<MoneyAdapter.ViewHolder> {
 
     private List<MoneyItem> list;
 
@@ -25,44 +25,39 @@ public class MoneyAdapter extends RecyclerView.Adapter<MoneyAdapter.ViewHolder> 
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(
+            @NonNull ViewGroup parent,
+            int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_money, parent, false);
+                .inflate(R.layout.item_money,
+                        parent,
+                        false);
 
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(
+            @NonNull ViewHolder holder,
+            int position) {
 
         MoneyItem item = list.get(position);
 
-        holder.txtMoney.setText(item.getText());
+        holder.txtLevel.setText(
+                String.valueOf(15 - position));
+
+        holder.txtMoney.setText(item.getMoney());
 
         if (item.isSelected()) {
 
-            holder.txtMoney.setBackgroundColor(Color.parseColor("#E39B3B"));
-            holder.txtMoney.setTextColor(Color.BLACK);
-
-            // Animation nhấp nháy
-            ObjectAnimator animator = ObjectAnimator.ofFloat(
-                    holder.txtMoney,
-                    "alpha",
-                    1f,
-                    0.3f,
-                    1f
-            );
-
-            animator.setDuration(500);
-            animator.setRepeatCount(ValueAnimator.INFINITE);
-            animator.start();
+            holder.imgBg.setImageResource(
+                    R.drawable.bg_money_selected);
 
         } else {
 
-            holder.txtMoney.setBackgroundColor(Color.TRANSPARENT);
-            holder.txtMoney.setTextColor(Color.parseColor("#F7B500"));
-            holder.txtMoney.setAlpha(1f);
+            holder.imgBg.setImageResource(
+                    R.drawable.bg_money_item);
         }
     }
 
@@ -71,13 +66,17 @@ public class MoneyAdapter extends RecyclerView.Adapter<MoneyAdapter.ViewHolder> 
         return list.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder
+            extends RecyclerView.ViewHolder {
 
-        TextView txtMoney;
+        ImageView imgBg;
+        TextView txtLevel, txtMoney;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            imgBg = itemView.findViewById(R.id.imgBg);
+            txtLevel = itemView.findViewById(R.id.txtLevel);
             txtMoney = itemView.findViewById(R.id.txtMoney);
         }
     }

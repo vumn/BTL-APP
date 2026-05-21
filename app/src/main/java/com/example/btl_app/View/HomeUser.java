@@ -1,6 +1,7 @@
 package com.example.btl_app.View;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.bumptech.glide.Glide;
 import com.example.btl_app.Controller.GameActivity;
 import com.example.btl_app.Controller.SettingScreen;
+import com.example.btl_app.Controller.SoundManager;
 import com.example.btl_app.Controller.StatistcScreen;
 import com.example.btl_app.MainActivity;
 import com.example.btl_app.Model.Setting;
@@ -34,6 +36,28 @@ import kotlin.internal.HidesMembers;
 public class HomeUser extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     private CircleImageView btnAvatar;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SoundManager.stopBgMusic();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences prefs =
+                getSharedPreferences("GameSettings", MODE_PRIVATE);
+
+        boolean soundEnabled =
+                prefs.getBoolean("soundEnabled", true);
+
+        if (soundEnabled) {
+            SoundManager.playBgMusic(this);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
