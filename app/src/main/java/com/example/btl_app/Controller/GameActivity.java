@@ -410,9 +410,7 @@ public class GameActivity extends AppCompatActivity {
                     updateGameSession("lose");
                     updateStatistics(false);
 
-                    showLoseDialog(
-                            "Đáp án đúng: " +
-                                    (char) ('A' + correctIndex));
+                    showWinDialog();
                 }
 
             }, 1200);
@@ -421,19 +419,7 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
-
-    //Dialogs
-
-    private void showLoseDialog(String message) {
-        new AlertDialog.Builder(this)
-                .setTitle("Sai rồi!")
-                .setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton("Về menu", (d, w) -> {
-                    startActivity(new Intent(this, HomeUser.class));
-                })
-                .show();
-    }
+    //Dialog
 
     private void showWinDialog() {
         Dialog dialog = new Dialog(this);
@@ -448,6 +434,10 @@ public class GameActivity extends AppCompatActivity {
         }
 
         TextView txtMessage = dialog.findViewById(R.id.txtMessage);
+
+        TextView txtMoney = dialog.findViewById(R.id.txtMoney);
+
+        txtMoney.setText(getMenuMoney() + "$");
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null)
