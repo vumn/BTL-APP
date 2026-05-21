@@ -48,9 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:backgroundTint="@color/black"
-            android:text="Cài đặt"
-            android:textColor="@color/white"
-            />
+            android:text="CÀI ĐẶT"
+            android:textColor="@color/white" />
 
     </LinearLayout>
 </RelativeLayout>

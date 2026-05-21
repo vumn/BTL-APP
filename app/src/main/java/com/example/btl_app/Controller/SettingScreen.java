@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.Switch;
 
 import androidx.activity.EdgeToEdge;
@@ -37,6 +38,42 @@ public class SettingScreen extends AppCompatActivity {
         switchSoundWrong = findViewById(R.id.soundWrong);
         switchSoundMenu = findViewById(R.id.soundMenu);
         ImageView btnBack = findViewById(R.id.btnClose);
+
+        // View thời gian
+        timeSeek = findViewById(R.id.timeSeek);
+        timeValue = findViewById(R.id.timeValue);
+
+        // Tải dữ liệu thời gian (30s)
+        int savedTime = sharedPreferences.getInt("questionTime", 30);
+        timeSeek.setProgress(savedTime);
+        timeValue.setText(savedTime + " giây");
+
+        timeSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // Ràng buộc thời gian tối thiểu là 5 giây (tránh lỗi nếu người dùng kéo về 0)
+                int actualTime = Math.max(progress, 5);
+                timeValue.setText(actualTime + " giây");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Không cần làm gì khi bắt đầu chạm
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Khi người dùng thả tay ra -> Lưu giá trị vào SharedPreferences
+                int finalTime = Math.max(seekBar.getProgress(), 5);
+                saveSettingInt("questionTime", finalTime);
+            }
+        });
+        // Hàm luuw kiểu Int cho tgian
+        private void saveSettingInt(String key, int value) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt(key, value);
+            editor.apply();
+        }
 
         // Load trạng thái đã lưu trước đó (mặc định là true/bật)
         switchSoundEnabled.setChecked(sharedPreferences.getBoolean("soundEnabled", true));
