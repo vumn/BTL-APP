@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +24,8 @@ public class SettingScreen extends AppCompatActivity {
 
     private Switch switchSoundEnabled, switchSoundCorrect, switchSoundWrong, switchSoundMenu;
     private SharedPreferences sharedPreferences;
+    private SeekBar timeSeek;
+    private TextView timeValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,23 @@ public class SettingScreen extends AppCompatActivity {
 
         // Khởi tạo SharedPreferences
         sharedPreferences = getSharedPreferences("GameSettings", Context.MODE_PRIVATE);
+        // Lấy thời gian đã cài đặt (trả về 30 nếu người dùng chưa từng cài đặt)
+        SharedPreferences prefs = getSharedPreferences("GameSettings", Context.MODE_PRIVATE);
+        int questionTimeInSeconds = prefs.getInt("questionTime", 30);
+
+        // Đổi ra milliseconds để dùng cho CountDownTimer (ví dụ: 30 * 1000 = 30,000 ms)
+        long timeInMillis = questionTimeInSeconds * 1000L;
+
+        // Sử dụng timeInMillis cho CountDownTimer của bạn
+        CountDownTimer myTimer = new CountDownTimer(timeInMillis, 1000) {
+            public void onTick(long millisUntilFinished) {
+                // Cập nhật giao diện đồng hồ: millisUntilFinished / 1000
+            }
+
+            public void onFinish() {
+                // Hết giờ -> Báo thua hoặc chuyển câu
+            }
+        }.start();
 
         // Ánh xạ View
         switchSoundEnabled = findViewById(R.id.soundEnabled);
@@ -68,12 +89,7 @@ public class SettingScreen extends AppCompatActivity {
                 saveSettingInt("questionTime", finalTime);
             }
         });
-        // Hàm luuw kiểu Int cho tgian
-        private void saveSettingInt(String key, int value) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt(key, value);
-            editor.apply();
-        }
+
 
         // Load trạng thái đã lưu trước đó (mặc định là true/bật)
         switchSoundEnabled.setChecked(sharedPreferences.getBoolean("soundEnabled", true));
@@ -111,6 +127,12 @@ public class SettingScreen extends AppCompatActivity {
     private void saveSetting(String key, boolean value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(key, value);
+        editor.apply();
+    }
+    // Hàm luuw kiểu Int cho tgian
+    private void saveSettingInt(String key, int value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(key, value);
         editor.apply();
     }
 }

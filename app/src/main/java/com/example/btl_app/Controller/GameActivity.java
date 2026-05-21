@@ -1,8 +1,11 @@
 package com.example.btl_app.Controller;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
@@ -43,6 +46,8 @@ public class GameActivity extends AppCompatActivity {
             2000, 4000, 8000, 16000, 32000,
             64000, 125000, 250000, 500000, 1000000
     };
+    private TextView tvTimer;
+    private CountDownTimer countDownTimer;
 
     //Firebase
     private FirebaseFirestore db;
@@ -65,25 +70,6 @@ public class GameActivity extends AppCompatActivity {
     private List<String> lifelinesUsed = new ArrayList<>();
     private boolean isLeavingGame = true;
 
-    // Lấy thời gian đã cài đặt (trả về 30 nếu người dùng chưa từng cài đặt)
-    SharedPreferences prefs = getSharedPreferences("GameSettings", Context.MODE_PRIVATE);
-    int questionTimeInSeconds = prefs.getInt("questionTime", 30);
-
-    // Đổi ra milliseconds để dùng cho CountDownTimer (ví dụ: 30 * 1000 = 30,000 ms)
-    long timeInMillis = questionTimeInSeconds * 1000L;
-
-    // Sử dụng timeInMillis cho CountDownTimer của bạn
-    CountDownTimer myTimer = new CountDownTimer(timeInMillis, 1000) {
-        public void onTick(long millisUntilFinished) {
-            // Cập nhật giao diện đồng hồ: millisUntilFinished / 1000
-        }
-
-        public void onFinish() {
-            // Hết giờ -> Báo thua hoặc chuyển câu
-        }
-    }.start();
-    
-
     //Lifecycle
 
     @Override
@@ -101,6 +87,9 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
         super.onDestroy();
         if (isLeavingGame && sessionId != null) {
             updateGameSession("quit");
@@ -134,6 +123,7 @@ public class GameActivity extends AppCompatActivity {
         tvQuestionNumber = findViewById(R.id.tvQuestionNumber);
         tvPrize = findViewById(R.id.tvPrize);
         tvQuestionContent = findViewById(R.id.tvQuestionContent);
+        tvTimer = findViewById(R.id.tvTimer);
 
         btnAnsA = findViewById(R.id.btnAnswerA);
         btnAnsB = findViewById(R.id.btnAnswerB);
@@ -152,13 +142,11 @@ public class GameActivity extends AppCompatActivity {
     //Load Data
 
     private int getMenuMoney() {
-        if(currentQuestionIndex <= 5)
-        {
+        if (currentQuestionIndex <= 5) {
             return 0;
-        }else if(currentQuestionIndex <= 10)
-        {
+        } else if (currentQuestionIndex <= 10) {
             return MONEY_TABLE[4];
-        }else {
+        } else {
             return MONEY_TABLE[9];
         }
     }
@@ -303,8 +291,7 @@ public class GameActivity extends AppCompatActivity {
         disableAllButtons();
 
         //display expert button
-        if(currentQuestionIndex == 5)
-        {
+        if (currentQuestionIndex == 5) {
             btnExpert.setVisibility(View.VISIBLE);
         }
 
@@ -334,11 +321,11 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void run() {
                 btnAnsD.setText("D. " + ans.get(3));
+                startTimer();
             }
         }, 3000);
         enableAllButtons();
     }
-
 
 
     private void resetAnswerButtons() {
@@ -356,6 +343,9 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void checkAnswer(int selectedIndex) {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
 
         SoundManager.playClickSound(this);
 
@@ -367,16 +357,16 @@ public class GameActivity extends AppCompatActivity {
         selectedButton.setBackgroundTintList(
                 getColorStateList(android.R.color.holo_orange_light));
 
-            AlphaAnimation blink =
-                    new AlphaAnimation(0.3f, 1.0f);
+        AlphaAnimation blink =
+                new AlphaAnimation(0.3f, 1.0f);
 
-            blink.setDuration(300);
+        blink.setDuration(300);
 
-            blink.setRepeatMode(AlphaAnimation.REVERSE);
+        blink.setRepeatMode(AlphaAnimation.REVERSE);
 
-            blink.setRepeatCount(3);
+        blink.setRepeatCount(3);
 
-            selectedButton.startAnimation(blink);
+        selectedButton.startAnimation(blink);
 
         new android.os.Handler().postDelayed(() -> {
 
@@ -469,21 +459,19 @@ public class GameActivity extends AppCompatActivity {
         TextView txtMessage = dialog.findViewById(R.id.txtMessage);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null)
-        {
+        if (user != null) {
             userId = user.getUid();
 
             db = FirebaseFirestore.getInstance();
 
             db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot ->
             {
-                if(documentSnapshot.exists())
-                {
+                if (documentSnapshot.exists()) {
                     username = documentSnapshot.getString("userName");
                     String str = "Chúc mừng " + username + " nhận được phần thưởng";
 
                     txtMessage.setText(str);
-                }else {
+                } else {
                     username = "Guest";
                     String str = "Chúc mừng " + username + " nhận được phần thưởng";
 
@@ -695,5 +683,55 @@ public class GameActivity extends AppCompatActivity {
     private int getMoney() {
         if (currentQuestionIndex == 0) return 0;
         return MONEY_TABLE[currentQuestionIndex - 1];
+    }
+
+    private void startTimer() {
+        // 1. Lấy cấu hình thời gian
+        SharedPreferences prefs = getSharedPreferences("GameSettings", Context.MODE_PRIVATE);
+        int questionTimeInSeconds = prefs.getInt("questionTime", 30);
+        long timeInMillis = questionTimeInSeconds * 1000L;
+
+        // 2. Hủy timer cũ trước khi tạo cái mới
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        // 3. Khởi tạo và chạy Timer mới
+        countDownTimer = new CountDownTimer(timeInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                int secondsLeft = (int) (millisUntilFinished / 1000);
+
+                // Cập nhật TextView (Đảm bảo bạn đã có TextView này trong file XML)
+                if (tvTimer != null) {
+                    tvTimer.setText(String.valueOf(secondsLeft));
+
+                    // Đổi sang màu đỏ khi sắp hết giờ (dưới 5s)
+                    if (secondsLeft <= 5) {
+                        tvTimer.setTextColor(android.graphics.Color.RED);
+                    } else {
+                        tvTimer.setTextColor(android.graphics.Color.WHITE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                if (tvTimer != null) {
+                    tvTimer.setText("0");
+                }
+
+                // Khi hết giờ: Vô hiệu hóa nút và xử lý THUA
+                disableAllButtons();
+                SoundManager.playWrongSound(GameActivity.this);
+
+                wrongAnswers++;
+                updateGameSession("lose");
+                updateStatistics(false);
+
+                int correctIndex = currentQuestion.getCorrectIndex();
+                showLoseDialog("Hết giờ!\nĐáp án đúng là: " + (char) ('A' + correctIndex));
+            }
+        }.start();
     }
 }
