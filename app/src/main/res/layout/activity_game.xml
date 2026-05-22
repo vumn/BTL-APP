@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_game"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/img_bg_game"
     android:orientation="vertical"
-    android:id="@+id/main_game"
-    android:background="@drawable/bg_trieuphu"
-    android:padding="16dp"
-    >
+    android:padding="16dp">
 
 
     <ImageButton
         android:id="@+id/ImgMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/menu_icon"
-        android:background="#ddb669"
         android:layout_marginTop="10dp"
-        />
+        android:layout_marginBottom="20dp"
+        android:background="#ddb669"
+        android:src="@drawable/menu_icon" />
 
 
     <RelativeLayout
@@ -69,8 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="25dp"
             android:gravity="center"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/btn5050Game"
@@ -86,83 +83,84 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00BCD4"
                 android:src="@drawable/statistic"
-                android:textColor="#FFFFFF" />
 
-            <ImageButton
-                android:id="@+id/btnCallGame"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#00BCD4"
-                android:src="@drawable/phone_call"
-                android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF" />
+
+                        <ImageButton
+                            android:id="@+id/btnCallGame"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="#00BCD4"
+                            android:src="@drawable/phone_call"
+                            android:textColor="#FFFFFF" />
 
 
-            <ImageButton
-                android:id="@+id/btnExpertGame"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#00BCD4"
-                android:src="@drawable/expert"
-                android:textColor="#FFFFFF"
-                android:visibility="invisible" />
-        </LinearLayout>
+                        <ImageButton
+                            android:id="@+id/btnExpertGame"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="#00BCD4"
+                            android:src="@drawable/expert"
+                            android:textColor="#FFFFFF"
+                            android:visibility="invisible" />
+                    </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="10dp">
 
-            <Button
-                android:id="@+id/btnAnswerA"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:text="A. "
-                android:layout_marginEnd="5dp"
-                android:backgroundTint="#1565C0"
-                android:textColor="#FFFFFF"
-                android:textAllCaps="false"/>
+                        <Button
+                            android:id="@+id/btnAnswerA"
+                            android:layout_width="0dp"
+                            android:layout_height="70dp"
+                            android:layout_weight="1"
+                            android:text="A. "
+                            android:layout_marginEnd="5dp"
+                            android:backgroundTint="#1565C0"
+                            android:textColor="#FFFFFF"
+                            android:textAllCaps="false"/>
 
-            <Button
-                android:id="@+id/btnAnswerB"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:text="B. "
-                android:layout_marginStart="5dp"
-                android:backgroundTint="#1565C0"
-                android:textColor="#FFFFFF"
-                android:textAllCaps="false"/>
-        </LinearLayout>
+                        <Button
+                            android:id="@+id/btnAnswerB"
+                            android:layout_width="0dp"
+                            android:layout_height="70dp"
+                            android:layout_weight="1"
+                            android:text="B. "
+                            android:layout_marginStart="5dp"
+                            android:backgroundTint="#1565C0"
+                            android:textColor="#FFFFFF"
+                            android:textAllCaps="false"/>
+                    </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnAnswerC"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:text="C. "
-                android:layout_marginEnd="5dp"
-                android:backgroundTint="#1565C0"
-                android:textColor="#FFFFFF"
-                android:textAllCaps="false"/>
+                        <Button
+                            android:id="@+id/btnAnswerC"
+                            android:layout_width="0dp"
+                            android:layout_height="70dp"
+                            android:layout_weight="1"
+                            android:text="C. "
+                            android:layout_marginEnd="5dp"
+                            android:backgroundTint="#1565C0"
+                            android:textColor="#FFFFFF"
+                            android:textAllCaps="false"/>
 
-            <Button
-                android:id="@+id/btnAnswerD"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:text="D. "
-                android:layout_marginStart="5dp"
-                android:backgroundTint="#1565C0"
-                android:textColor="#FFFFFF"
-                android:textAllCaps="false"/>
-        </LinearLayout>
-    </LinearLayout>
+                        <Button
+                            android:id="@+id/btnAnswerD"
+                            android:layout_width="0dp"
+                            android:layout_height="70dp"
+                            android:layout_weight="1"
+                            android:text="D. "
+                            android:layout_marginStart="5dp"
+                            android:backgroundTint="#1565C0"
+                            android:textColor="#FFFFFF"
+                            android:textAllCaps="false"/>
+                    </LinearLayout>
+                </LinearLayout>
 
-</LinearLayout>
+            </LinearLayout>

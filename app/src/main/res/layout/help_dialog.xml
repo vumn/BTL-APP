@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_help"
+    android:layout_gravity="center">
+
+    <TextView
+        android:id="@+id/txtTitleHelp"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:background="@drawable/title_help_dialog"
+        android:gravity="center"
+        android:text="Trợ Giúp"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/txtDes"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="Tôi chắc Chắn đó là phương án D"
+        android:textSize="20sp"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#CC3300"
+        android:text="Đóng" />
+
+
+</LinearLayout>

@@ -1,8 +1,11 @@
 package com.example.btl_app.Controller;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
@@ -65,24 +68,7 @@ public class GameActivity extends AppCompatActivity {
     private List<String> lifelinesUsed = new ArrayList<>();
     private boolean isLeavingGame = true;
 
-    // Lấy thời gian đã cài đặt (trả về 30 nếu người dùng chưa từng cài đặt)
-    SharedPreferences prefs = getSharedPreferences("GameSettings", Context.MODE_PRIVATE);
-    int questionTimeInSeconds = prefs.getInt("questionTime", 30);
 
-    // Đổi ra milliseconds để dùng cho CountDownTimer (ví dụ: 30 * 1000 = 30,000 ms)
-    long timeInMillis = questionTimeInSeconds * 1000L;
-
-    // Sử dụng timeInMillis cho CountDownTimer của bạn
-    CountDownTimer myTimer = new CountDownTimer(timeInMillis, 1000) {
-        public void onTick(long millisUntilFinished) {
-            // Cập nhật giao diện đồng hồ: millisUntilFinished / 1000
-        }
-
-        public void onFinish() {
-            // Hết giờ -> Báo thua hoặc chuyển câu
-        }
-    }.start();
-    
 
     //Lifecycle
 
@@ -146,20 +132,22 @@ public class GameActivity extends AppCompatActivity {
         btnCall = findViewById(R.id.btnCallGame);
         btnMenu = findViewById(R.id.ImgMenu);
         SoundManager.playBgMusic(this);
+
     }
 
 
     //Load Data
 
     private int getMenuMoney() {
-        if(currentQuestionIndex <= 5)
-        {
+        if (currentQuestionIndex <= 5) {
             return 0;
-        }else if(currentQuestionIndex <= 10)
-        {
+        } else if (currentQuestionIndex <= 10) {
             return MONEY_TABLE[4];
-        }else {
+        } else if (currentQuestionIndex <= 14) {
             return MONEY_TABLE[9];
+        } else {
+            return MONEY_TABLE[14];
+
         }
     }
 
@@ -300,11 +288,8 @@ public class GameActivity extends AppCompatActivity {
 
     private void loadCurrentQuestion() {
         setEmptyDataAnswer();
-        disableAllButtons();
-
         //display expert button
-        if(currentQuestionIndex == 5)
-        {
+        if (currentQuestionIndex == 5) {
             btnExpert.setVisibility(View.VISIBLE);
         }
 
@@ -316,6 +301,8 @@ public class GameActivity extends AppCompatActivity {
         tvQuestionContent.setText(currentQuestion.getContent());
 
         LoadAnswers();
+        disableAllButtons();
+
         btnAnsA.setText("A. " + ans.get(0));
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
@@ -336,9 +323,14 @@ public class GameActivity extends AppCompatActivity {
                 btnAnsD.setText("D. " + ans.get(3));
             }
         }, 3000);
-        enableAllButtons();
-    }
 
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                enableAllButtons();
+            }
+        }, 3100);
+    }
 
 
     private void resetAnswerButtons() {
@@ -367,16 +359,16 @@ public class GameActivity extends AppCompatActivity {
         selectedButton.setBackgroundTintList(
                 getColorStateList(android.R.color.holo_orange_light));
 
-            AlphaAnimation blink =
-                    new AlphaAnimation(0.3f, 1.0f);
+        AlphaAnimation blink =
+                new AlphaAnimation(0.3f, 1.0f);
 
-            blink.setDuration(300);
+        blink.setDuration(300);
 
-            blink.setRepeatMode(AlphaAnimation.REVERSE);
+        blink.setRepeatMode(AlphaAnimation.REVERSE);
 
-            blink.setRepeatCount(3);
+        blink.setRepeatCount(3);
 
-            selectedButton.startAnimation(blink);
+        selectedButton.startAnimation(blink);
 
         new android.os.Handler().postDelayed(() -> {
 
@@ -440,6 +432,28 @@ public class GameActivity extends AppCompatActivity {
 
     //Dialog
 
+    private void showDialogForEachHelper(String str) {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.help_dialog);
+        dialog.setCancelable(false);
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        TextView txtDes = dialog.findViewById(R.id.txtDes);
+
+        txtDes.setText(str);
+        dialog.findViewById(R.id.btnCancel).setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+
     private void showWinDialog() {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -459,21 +473,19 @@ public class GameActivity extends AppCompatActivity {
         txtMoney.setText(getMenuMoney() + "$");
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null)
-        {
+        if (user != null) {
             userId = user.getUid();
 
             db = FirebaseFirestore.getInstance();
 
             db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot ->
             {
-                if(documentSnapshot.exists())
-                {
+                if (documentSnapshot.exists()) {
                     username = documentSnapshot.getString("userName");
                     String str = "Chúc mừng " + username + " nhận được phần thưởng";
 
                     txtMessage.setText(str);
-                }else {
+                } else {
                     username = "Guest";
                     String str = "Chúc mừng " + username + " nhận được phần thưởng";
 
@@ -560,11 +572,7 @@ public class GameActivity extends AppCompatActivity {
             btnExpert.setVisibility(View.INVISIBLE);
 
             int correct = currentQuestion.getCorrectIndex();
-            new AlertDialog.Builder(this)
-                    .setTitle("Chuyên gia")
-                    .setMessage("Đáp án: " + (char) ('A' + correct))
-                    .setPositiveButton("OK", null)
-                    .show();
+            showDialogForEachHelper("Theo Chuyên Gia đáp án là: " + (char) ('A' + correct));
         });
 
         btnCall.setOnClickListener(v -> {
@@ -574,11 +582,7 @@ public class GameActivity extends AppCompatActivity {
             int correct = currentQuestion.getCorrectIndex();
             int answer = Math.random() < 0.75 ? correct : new Random().nextInt(4);
 
-            new AlertDialog.Builder(this)
-                    .setTitle("Gọi điện")
-                    .setMessage("Bạn bè gợi ý: " + (char) ('A' + answer))
-                    .setPositiveButton("OK", null)
-                    .show();
+            showDialogForEachHelper("Bạn bè gợi ý: " + (char) ('A' + answer));
         });
 
         btnStatistic.setOnClickListener(v -> {
@@ -595,16 +599,12 @@ public class GameActivity extends AppCompatActivity {
                 if (i != correct) percent[i] = remain / 3;
             }
 
-            String msg = "A: " + percent[0] + "%\n"
-                    + "B: " + percent[1] + "%\n"
-                    + "C: " + percent[2] + "%\n"
-                    + "D: " + percent[3] + "%";
+            String msg = "Đáp án A: " + percent[0] + "%\n"
+                    + "Đáp án B: " + percent[1] + "%\n"
+                    + "Đáp án C: " + percent[2] + "%\n"
+                    + "Đáp án D: " + percent[3] + "%";
 
-            new AlertDialog.Builder(this)
-                    .setTitle("Khán giả bình chọn")
-                    .setMessage(msg)
-                    .setPositiveButton("OK", null)
-                    .show();
+            showDialogForEachHelper(msg);
         });
     }
 

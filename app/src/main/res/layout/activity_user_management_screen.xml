@@ -37,14 +37,6 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/btnAddUser"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:backgroundTint="#2196F3"
-            android:text="Thêm User"
-            android:textColor="#FFFFFF" />
-
-        <Button
             android:id="@+id/btnBackAdminScreenFromUserListScreen"
             android:layout_width="match_parent"
             android:layout_height="50dp"

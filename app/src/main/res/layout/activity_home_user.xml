@@ -31,25 +31,25 @@
             android:id="@+id/btnPlayUser"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="#99CCFF"
             android:text="CHƠI NGAY"
-            android:textColor="@color/white" />
+            android:textColor="#990000" />
 
         <Button
             android:id="@+id/btnStatisticUser"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="#99CCFF"
             android:text="THỐNG KÊ"
-            android:textColor="@color/white" />
+            android:textColor="#990000" />
 
         <Button
             android:id="@+id/btnSettingUser"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="#99CCFF"
             android:text="CÀI ĐẶT"
-            android:textColor="@color/white" />
+            android:textColor="#990000" />
 
     </LinearLayout>
 </RelativeLayout>

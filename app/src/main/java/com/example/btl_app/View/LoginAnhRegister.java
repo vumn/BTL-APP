@@ -258,9 +258,9 @@ public class LoginAnhRegister extends AppCompatActivity {
                 .document(userId)
                 .set(user)
                 .addOnSuccessListener(unused ->
-                        Log.d("Firestore", "✅ User saved successfully"))
+                        Log.d("Firestore", "User saved successfully"))
                 .addOnFailureListener(e -> {
-                    Log.e("Firestore", "❌ Error saving user: " + e.getMessage());
+                    Log.e("Firestore", "Error saving user: " + e.getMessage());
                     Toast.makeText(getApplicationContext(),
                             "Lỗi lưu user: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
