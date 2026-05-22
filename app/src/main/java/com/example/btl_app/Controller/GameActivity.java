@@ -337,7 +337,9 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void run() {
                 btnAnsD.setText("D. " + ans.get(3));
-                startTimer();
+                if (gamemode == 1) {
+                    startTimer();
+                }
             }
         }, 3000);
 
