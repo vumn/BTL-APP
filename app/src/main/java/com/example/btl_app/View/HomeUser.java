@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -23,15 +21,12 @@ import com.example.btl_app.Controller.SettingScreen;
 import com.example.btl_app.Controller.SoundManager;
 import com.example.btl_app.Controller.StatistcScreen;
 import com.example.btl_app.MainActivity;
-import com.example.btl_app.Model.Setting;
-import com.example.btl_app.Model.User;
 import com.example.btl_app.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import kotlin.internal.HidesMembers;
 
 public class HomeUser extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
