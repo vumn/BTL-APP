@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -46,6 +47,8 @@ public class GameActivity extends AppCompatActivity {
             2000, 4000, 8000, 16000, 32000,
             64000, 125000, 250000, 500000, 1000000
     };
+    private TextView tvTimer;
+    private CountDownTimer countDownTimer;
 
     //Firebase
     private FirebaseFirestore db;
@@ -69,7 +72,6 @@ public class GameActivity extends AppCompatActivity {
     private boolean isLeavingGame = true;
 
 
-
     //Lifecycle
 
     @Override
@@ -87,6 +89,9 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
         super.onDestroy();
         if (isLeavingGame && sessionId != null) {
             updateGameSession("quit");
@@ -120,6 +125,7 @@ public class GameActivity extends AppCompatActivity {
         tvQuestionNumber = findViewById(R.id.tvQuestionNumber);
         tvPrize = findViewById(R.id.tvPrize);
         tvQuestionContent = findViewById(R.id.tvQuestionContent);
+        tvTimer = findViewById(R.id.tvTimer);
 
         btnAnsA = findViewById(R.id.btnAnswerA);
         btnAnsB = findViewById(R.id.btnAnswerB);
@@ -303,6 +309,16 @@ public class GameActivity extends AppCompatActivity {
         LoadAnswers();
         disableAllButtons();
 
+        SharedPreferences prefs = getSharedPreferences("GameSettings", Context.MODE_PRIVATE);
+        int gamemode = prefs.getInt("gameMode", 0);
+        if (gamemode == 0) {
+            tvTimer.setVisibility(View.GONE);
+        } else {
+            tvTimer.setVisibility(View.VISIBLE);
+            int time = prefs.getInt("questionTime", 30);
+            tvTimer.setText(String.valueOf(time));
+        }
+
         btnAnsA.setText("A. " + ans.get(0));
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
@@ -321,6 +337,7 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void run() {
                 btnAnsD.setText("D. " + ans.get(3));
+                startTimer();
             }
         }, 3000);
 
@@ -348,6 +365,9 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void checkAnswer(int selectedIndex) {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
 
         SoundManager.playClickSound(this);
 
@@ -685,5 +705,55 @@ public class GameActivity extends AppCompatActivity {
     private int getMoney() {
         if (currentQuestionIndex == 0) return 0;
         return MONEY_TABLE[currentQuestionIndex - 1];
+    }
+
+    private void startTimer() {
+        // 1. Lấy cấu hình thời gian
+        SharedPreferences prefs = getSharedPreferences("GameSettings", Context.MODE_PRIVATE);
+        int questionTimeInSeconds = prefs.getInt("questionTime", 30);
+        long timeInMillis = questionTimeInSeconds * 1000L;
+
+        // 2. Hủy timer cũ trước khi tạo cái mới
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        // 3. Khởi tạo và chạy Timer mới
+        countDownTimer = new CountDownTimer(timeInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                int secondsLeft = (int) (millisUntilFinished / 1000);
+
+                // Cập nhật TextView (Đảm bảo bạn đã có TextView này trong file XML)
+                if (tvTimer != null) {
+                    tvTimer.setText(String.valueOf(secondsLeft));
+
+                    // Đổi sang màu đỏ khi sắp hết giờ (dưới 5s)
+                    if (secondsLeft <= 5) {
+                        tvTimer.setTextColor(android.graphics.Color.RED);
+                    } else {
+                        tvTimer.setTextColor(android.graphics.Color.WHITE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                if (tvTimer != null) {
+                    tvTimer.setText("0");
+                }
+
+                // Khi hết giờ: Vô hiệu hóa nút và xử lý THUA
+                disableAllButtons();
+                SoundManager.playWrongSound(GameActivity.this);
+
+                wrongAnswers++;
+                updateGameSession("lose");
+                updateStatistics(false);
+
+//                int correctIndex = currentQuestion.getCorrectIndex();
+                showWinDialog();
+            }
+        }.start();
     }
 }

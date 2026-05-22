@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -15,11 +19,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.btl_app.Controller.SoundManager;
 import com.example.btl_app.R;
 import com.example.btl_app.View.HomeUser;
 
+import java.security.PrivateKey;
+import java.util.ArrayList;
+
 public class SettingScreen extends AppCompatActivity {
 
+
+    private static final String[] Gamemode = {"Tự do", "Thời gian"};
     private Switch switchSoundEnabled,
             switchSoundCorrect,
             switchSoundWrong,
@@ -45,6 +55,35 @@ public class SettingScreen extends AppCompatActivity {
                         "GameSettings",
                         Context.MODE_PRIVATE);
 
+        // Lấy thời gian đã lưu
+        int questionTimeInSeconds =
+                sharedPreferences.getInt(
+                        "questionTime",
+                        30);
+
+        // Đổi sang milliseconds
+        long timeInMillis =
+                questionTimeInSeconds * 1000L;
+
+        // Timer demo
+        CountDownTimer myTimer =
+                new CountDownTimer(
+                        timeInMillis,
+                        1000) {
+
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                        // Cập nhật thời gian nếu cần
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                        // Hết giờ
+                    }
+                };
+
         // Views
         switchSoundEnabled =
                 findViewById(R.id.soundEnabled);
@@ -61,14 +100,13 @@ public class SettingScreen extends AppCompatActivity {
         ImageView btnBack =
                 findViewById(R.id.btnClose);
 
-        // TIME
         timeSeek =
                 findViewById(R.id.timeSeek);
 
         timeValue =
                 findViewById(R.id.timeValue);
 
-        // Load time
+        // Load thời gian
         int savedTime =
                 sharedPreferences.getInt(
                         "questionTime",
@@ -111,13 +149,15 @@ public class SettingScreen extends AppCompatActivity {
                                         seekBar.getProgress(),
                                         5);
 
+                        seekBar.setProgress(finalTime);
+
                         saveSettingInt(
                                 "questionTime",
                                 finalTime);
                     }
                 });
 
-        // Load switches
+        // Load switch states
         switchSoundEnabled.setChecked(
                 sharedPreferences.getBoolean(
                         "soundEnabled",
@@ -138,7 +178,7 @@ public class SettingScreen extends AppCompatActivity {
                         "soundMenu",
                         true));
 
-        // Events
+        // Sound Enabled
         switchSoundEnabled
                 .setOnCheckedChangeListener(
                         (buttonView, isChecked) -> {
@@ -157,28 +197,31 @@ public class SettingScreen extends AppCompatActivity {
                             }
                         });
 
+        // Sound Correct
         switchSoundCorrect
                 .setOnCheckedChangeListener(
-                        (b, isChecked) ->
+                        (buttonView, isChecked) ->
                                 saveSetting(
                                         "soundCorrect",
                                         isChecked));
 
+        // Sound Wrong
         switchSoundWrong
                 .setOnCheckedChangeListener(
-                        (b, isChecked) ->
+                        (buttonView, isChecked) ->
                                 saveSetting(
                                         "soundWrong",
                                         isChecked));
 
+        // Sound Menu
         switchSoundMenu
                 .setOnCheckedChangeListener(
-                        (b, isChecked) ->
+                        (buttonView, isChecked) ->
                                 saveSetting(
                                         "soundMenu",
                                         isChecked));
 
-        // Back
+        // Back button
         btnBack.setOnClickListener(view -> {
 
             Intent it =
@@ -211,6 +254,50 @@ public class SettingScreen extends AppCompatActivity {
 
                     return insets;
                 });
+
+
+        ChooseGameMode();
+    }
+
+    private void ChooseGameMode() {
+        Spinner spinner = findViewById(R.id.gameMode);
+        android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Gamemode);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        //Load mode đã lưu
+        int saveMode = sharedPreferences.getInt("gameMode", 0);
+
+        spinner.setSelection(saveMode);
+
+        //xử lý chọn item
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                saveSettingInt("gameMode", i);
+
+                //mode tự do
+                if(i == 0)
+                {
+                    timeSeek.setEnabled(false);
+                    timeValue.setText("không giới hạn!");
+                }
+
+                //mode có thời gian
+                else {
+                    timeSeek.setEnabled(true);
+                    int savedTime = sharedPreferences.getInt("questionTime", 30);
+                    timeValue.setText(savedTime + "giây");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     // Save boolean
